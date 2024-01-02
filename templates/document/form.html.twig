@@ -1,0 +1,23 @@
+
+{{ form_start(form, {'method': http_method}) }}
+        {% if not form.vars.valid %}
+        <div class="errors">
+             {{ form_errors(form) }}
+        </div>
+        {% endif %}
+
+    <div>
+        {{ form_label(form.nom_doc, 'Nom document') }} {{ form_widget(form.nom_doc) }}
+        {{ form_help(form.nom_doc) }}
+    </div>
+    <div>
+        {{ form_label(form.sujet_doc, 'Sujet du document') }} {{ form_widget(form.sujet_doc) }}
+        {{ form_help(form.sujet_doc) }}
+    </div>
+    {{ form_row(form.save, { 'label': button_label }) }}
+
+{{ form_end(form) }}
+
+{{ form_start(form, {'method': http_method, attr : {novalidate: 'novalidate'}}) }}
+{{ form_end(form) }}
+

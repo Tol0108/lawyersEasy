@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="avocats-container">
+        <h1>Liste des Avocats</h1>
+
+        <div class="avocats-liste">
+            {% for avocat in avocats %}
+                <div class="avocat-card">
+                    {% if avocat.photo %}
+                        <img src="/chemin/vers/les/photos/{{ avocat.photo }}" alt="Photo de {{ avocat.nom }}" class="avocat-photo">
+                    {% else %}
+                        <p>Aucune photo disponible.</p>
+                    {% endif %}
+                    <div class="avocat-info">
+                        <h2>Maître {{ avocat.nom }}</h2>
+                        <p>Spécialité: {{ avocat.specialite.nom }}</p>
+                        <a href="{{ path('reservation_new', {'avocatId': avocat.id}) }}" class="btn btn-primary">Prendre rendez-vous</a>
+                    </div>
+                </div>
+            {% else %}
+                <p>Aucun avocat trouvé.</p>
+            {% endfor %}
+        </div>
+    </div>
+    <style>
+        .avocats-container {
+            padding: 20px;
+        }
+        .avocats-liste {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .avocat-card {
+            width: 23%; /* Ajuster en fonction de la taille de l'écran */
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .avocat-photo {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .avocat-info {
+            margin-top: 10px;
+        }
+        @media (max-width: 768px) {
+            .avocat-card {
+                width: 48%; /* Pour les petits écrans */
+            }
+        }
+    </style>
+{% endblock %}

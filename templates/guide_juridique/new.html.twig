@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Créer un nouveau guide juridique</h1>
+
+    {{ form_start(guidejuridiqueForm) }}
+        {{ form_widget(guidejuridiqueForm) }}
+         <button class="btn">Enregistrer</button>
+    {{ form_end(guidejuridiqueForm) }}
+
+    <a href="{{ path('guidejuridique') }}">Retour à la liste</a>
+{% endblock %}

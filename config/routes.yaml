@@ -1,3 +1,15 @@
 controllers:
     resource: ../src/Controller/
     type: attribute
+
+new_avocat:
+    path: /avocat/new-avocat
+    controller: App\Controller\AvocatController::new
+    methods: [GET, POST]
+convert:
+    path: /convert
+    controller: App\Controller\ConvertController::convert
+
+weather:
+    path: /weather/{city}
+    controller: App\Controller\WeatherController::weather

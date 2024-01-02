@@ -1,0 +1,5 @@
+easy_admin:
+    entities:
+        VotreEntite:
+            class: App\Entity\Avocat
+            

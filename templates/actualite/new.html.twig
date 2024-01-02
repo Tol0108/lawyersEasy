@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Créer une nouvelle actualité</h1>
+
+    {{ form_start(actualiteForm) }}
+        {{ form_widget(actualiteForm) }}
+        <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_end(actualiteForm) }}
+
+    <a href="{{ path('actualite_index') }}">Retour à la liste</a>
+{% endblock %}

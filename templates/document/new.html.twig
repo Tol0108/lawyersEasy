@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un document{% endblock %}
+
+{% block body %}
+    <h2>Créer un document</h2>
+
+    {{ include('document/_form.html.twig', {'http_method': 'POST','button_label': 'Ajouter'}) }}
+
+    <nav><a href="{{ path('document_index') }}">Retour à l'index</a></nav>
+{% endblock %}
+
+{% for message in app.flashes('error') %}
+    <div class="alert alert-danger">
+        {{ message }}
+    </div>
+{% endfor %}
+
+{{ form_start(documentForm) }}
+    {{ form_widget(documentForm) }}
+    <button type="submit" class="btn btn-success">Upload Document</button>
+{{ form_end(documentForm) }}

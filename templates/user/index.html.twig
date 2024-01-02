@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Specialite Avocat!{% endblock %}
+
+{% block body %}
+    <label for="specialite-select">Choisissez une spécialité :</label>
+    <select id="specialite-select" name="specialite">
+        <option value="">--Choisissez une spécialité--</option>
+        {% for specialite in specialites %}
+            <option value="{{ specialite.id }}">{{ specialite.nom }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Si vous souhaitez afficher la liste des spécialités -->
+    {% for specialite in specialites %}
+        <p>{{ specialite.nom }}</p> <!-- Affiche le nom de chaque spécialité -->
+    {% endfor %}
+{% endblock %}

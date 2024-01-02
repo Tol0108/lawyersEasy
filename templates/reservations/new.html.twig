@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Réservation{% endblock %}
+
+{% block body %}
+    <h1>Créer une nouvelle réservation</h1>
+
+    {{ form_start(reservationForm) }}
+    {# ... autres champs ... #}
+    {{ form_row(reservationForm.date_reservation) }}
+    <button type="submit">Réserver</button>
+{{ form_end(reservationForm) }}
+{% endblock %}

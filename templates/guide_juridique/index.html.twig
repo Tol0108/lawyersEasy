@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Guide Juridiques</h1>
+    <a href="{{ path('guidejuridique') }}">Créer un nouveaux guide Juridique</a>
+    <ul>
+        {% for guidejuridique in guidejuridiques %}
+            <li>
+                <h2>{{ guidejuridique.titre }}</h2>
+                <p>{{ guideJuridique.contenu|slice(0, 150) ~ '...' }}</p>
+                <div>
+                    <a href="{{ path('guidejuridique_edit', {'id': guideJuridique.id}) }}">Modifier</a>
+                    <form method="post" action="{{ path('guidejuridique_delete', {'id': guideJuridique.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce guide ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ guideJuridique.id) }}">
+                        <button class="btn">Supprimer</button>
+                    </form>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

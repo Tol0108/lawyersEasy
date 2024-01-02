@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avocats & Facile</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <nav>
+            <ul>
+                <li>
+                    <img src="{{ asset('images/Logo.png') }}" alt="Logo" class="logo">
+                </li>
+                {% include 'include/menu.html.twig' %}
+            </ul>
+        </nav>
+    </header>
+    
+    {% block body %}{% endblock %} <!-- Zone de contenu principal à remplir dans d'autres templates -->
+
+    <!-- Pied de page, scripts JS, etc. -->
+</body>
+</html>

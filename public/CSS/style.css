@@ -1,0 +1,13 @@
+<head>
+<style>
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .language-selector {
+        margin-right: 20px;
+    }
+</style>
+</head>

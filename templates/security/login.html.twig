@@ -1,0 +1,51 @@
+{# templates/security/login.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="login-form-container">
+        <form action="{{ path('login') }}" method="post" class="login-form">
+            {% if error %}
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="username">Email:</label>
+                <input type="text" id="username" name="_username" value="{{ last_username }}" required autofocus class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Mot de passe:</label>
+                <input type="password" id="password" name="_password" required class="form-control">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Se connecter</button>
+        </form>
+    </div>
+
+    <style>
+        .login-form-container {
+            margin-top: 40px; /* Espace en haut du formulaire */
+            padding: 20px; /* Espace interne au formulaire */
+            background-color: #f8f9fa; /* Couleur de fond */
+            border-radius: 5px; /* Bords arrondis */
+        }
+
+        .login-form .form-group {
+            margin-bottom: 15px; /* Espace entre les champs */
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        }
+    </style>
+{% endblock %}

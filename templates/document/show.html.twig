@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Type de document{% endblock %}
+
+{% block body %}
+    <h1>{{ document.nom_doc }} {{ document.sujet_doc }}</h1>
+    
+    <h2>Liste des types</h2>
+    <ul>
+    
+    </ul>
+
+    <nav><a href="{{ path('document_index') }}">Retour à l'index</a></nav>
+{% endblock %}
+

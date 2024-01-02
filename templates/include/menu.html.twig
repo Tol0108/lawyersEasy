@@ -1,0 +1,101 @@
+<style>
+        body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    }
+
+    header {
+        background-color: #000000; /* Fond noir */
+        color: #ffffff; /* Texte blanc */
+        position: fixed; /* Fixe le header en haut */
+        width: 100%; /* Le header prend toute la largeur */
+        z-index: 1000; /* S'assure que le header reste au-dessus des autres éléments */
+    }
+
+    nav ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-wrap: wrap; /* Permet aux éléments de la liste de passer à la ligne si nécessaire */
+    }
+
+    nav ul li {
+        padding: 15px 20px;
+    }
+
+    nav ul li a {
+        text-decoration: none;
+        color: #ffffff; /* Liens de texte blanc */
+    }
+
+    nav ul li.bouton a {
+        background-color: #d2ae6d; /* Fond doré pour les boutons */
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    nav ul li.bouton a:hover {
+        background-color: #b98c4d; /* Couleur dorée plus foncée au survol */
+    }
+
+    header nav .logo {
+    height: 50px; /* Hauteur du logo, à ajuster selon vos besoins */
+    float: left; /* Positionne le logo à gauche */
+    margin-right: 20px; /* Espace entre le logo et le menu */
+    }
+
+    nav ul {
+        /* Reste de votre CSS pour nav ul */
+        display: flex;
+        align-items: center; /* Centre les éléments du menu verticalement */
+        /* Autres propriétés */
+    }
+
+    /* Styles pour les écrans plus petits */
+    @media (max-width: 768px) {
+        nav ul {
+            flex-direction: column;
+            align-items: stretch; /* Étend les éléments de la liste pour qu'ils prennent toute la largeur */
+    }
+        
+        nav ul li {
+            text-align: center; /* Centre le texte pour les éléments de la liste */
+        }
+        
+        nav ul li.bouton a {
+            display: block; /* Affiche les boutons comme des blocs */
+            width: 100%; /* Les boutons prennent toute la largeur */
+            margin-bottom: 10px; /* Ajoute de l'espace entre les boutons */
+        }
+         nav ul li.bouton b{
+            display: block; /* Assure que chaque élément de liste s'affiche comme un bloc */
+            width: 100%; /* Les boutons prennent toute la largeur */
+            margin-bottom: 10px; /* Ajoute de l'espace entre les boutons */
+        }
+        header nav .logo {
+            height: 30px; /* Taille plus petite pour les écrans plus petits */
+            margin-right: 10px;
+        }
+    }
+    </style>
+<nav>
+    <ul>articles
+            <!-- Ajout des onglets fixes -->
+            <li><a href="{{ path('home') }}">Accueil</a></li>
+            <li><a href="{{ path('list') }}">Trouver un avocat</a></li>
+            <li><a href="#actualites">Actualités</a></li>
+            <li><a href="{{ path('articles') }}">Guides Juridiques</a></li>
+            <li><a href="#moncompte">Mon compte</a></li>
+            <li class="bouton b"><a href="{{ path('login') }}">Se connecter</a></li>
+            <li class="bouton b"><a href="{{ path('register') }}">Inscription</a></li>
+
+            <!-- Onglet conditionnel pour les utilisateurs avec le rôle 'ROLE_ADMIN' ou 'ROLE_AVOCAT' -->
+            {% if app.user and 'ROLE_ADMIN' in app.user.roles %}
+                <li class="bouton"><a href="{{ path('avocat_new') }}"><i class="fas fa-user-plus"></i> Ajouter un avocat</a></li>
+            {% endif %}
+    </ul>
+</nav>

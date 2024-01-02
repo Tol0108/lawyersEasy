@@ -1,19 +1,86 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avocats & Facile</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        .registration-form {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
+        .registration-form .form-group {
+            margin-bottom: 15px;
+        }
+        .form-container {
+            margin-top: 40px;
+        }
+
+        .registration-form .form-group,
+        .registration-form .form-control {
+            margin-bottom: 20px;
+        }
+
+        .registration-form div {
+            margin-bottom: 20px;
+        }
+
+        .registration-form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .registration-form input[type="text"],
+        .registration-form input[type="password"],
+        .registration-form input[type="email"],
+        .registration-form select,
+        .registration-form textarea {
+            margin-top: 5px;
+        }
+
+        /* Styles spécifiques pour l'affichage météo */
+        .weather-container {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e7e7e7;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        {% include "include/header.html.twig" %}
+    </header>
+
+    <nav>
+        {% include "include/menu.html.twig" %}
+    </nav>
+
+    <main>
+        {% block body %}
+            <!-- Le contenu spécifique de chaque page sera inséré ici -->
+
+            <!-- Code HTML pour afficher les informations météorologiques -->
+            <div class="weather-container">
+                <h2>Météo pour {{ weatherData.name }}</h2>
+                <p>Conditions actuelles : {{ weatherData.weather[0].description }}</p>
+                <p>Température actuelle : {{ weatherData.main.temp }}°C</p>
+                <p>Humidité : {{ weatherData.main.humidity }}%</p>
+                <p>Pression atmosphérique : {{ weatherData.main.pressure }} hPa</p>
+            </div>
+            <!-- Fin du code HTML pour afficher les informations météorologiques -->
+
         {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+    </main>
+
+    {% include "include/footer.html.twig" %}
+    {% include "include/flash.html.twig" %}
+
+    <!-- Vos scripts JavaScript ici -->
+
+</body>
 </html>

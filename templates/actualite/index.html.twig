@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Actualités</h1>
+    <a href="{{ path('actualite_new') }}">Créer une nouvelle actualité</a>
+    <ul>
+        {% for actualite in actualites %}
+            <li>
+                <h2>{{ actualite.titre }}</h2>
+                <p>{{ actualite.contenu }}</p>
+                <small>Publié le : {{ actualite.datePublication|date('Y-m-d H:i') }}</small>
+            </li>
+            <div>
+                <a href="{{ path('actualite_edit', {'id': actualite.id}) }}">Modifier</a>
+                <form method="post" action="{{ path('actualite_delete', {'id': actualite.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ actualite.id) }}">
+                    <button class="btn">Supprimer</button>
+                </form>
+            </div>
+        {% endfor %}
+    </ul>
+{% endblock %}

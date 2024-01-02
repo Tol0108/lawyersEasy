@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %} {% block title %}Liste des Artistes{% endblock %}
+{% block body %}
+
+<link rel="stylesheet" type="text/css" href="{{ asset('asset/css/datatables.css') }}">
+<div class="page-header" >
+  <h1>Liste des Documents</h1>
+</div>
+
+{% for message in app.flashes('success') %}
+<div class="alert-success">
+  {{ message }}
+{% endfor %}
+
+<table class="table_document">
+  <div>
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Sujet</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+  </div>
+
+  <tbody>
+    {% for document in documents %}
+    <tr>
+      <td>{{ document.nom_doc }}</td>
+      <td>
+        
+      </td>
+      <td>
+        <div class="btn-group btn-group-justified">
+          <a class="btn btn-primary"
+              href="{{ path('document_edit', { id: document.id }) }}"
+              type="submit"
+              id="document_save"
+              name="document[save]"
+              >Modifier</a
+            >           
+          
+            {{ include("document/_delete_form.html.twig") }}
+      </td>
+      
+    </tr>
+    {% endfor %}   
+
+  </tbody>
+  
+</table>
+<br />
+<br />
+
+<div class="btn_ajouter">
+  <button type="button" class="btn btn-outline-secondary"><a href="{{ path('document_new') }}">Ajouter</a></button>
+</div>
+
+{% endblock %}

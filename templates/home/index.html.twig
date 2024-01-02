@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+    {% include 'includes/header.html.twig' %}
+{% endblock %}
+
+{% block body %}
+    <!-- Le contenu spécifique de la page d'accueil -->
+    <div style="text-align: center;">
+        <img src="{{ asset('images/Logo.png') }}" alt="Description de l'image 1" style="float: left; margin-right: 10px;">
+        <div style="clear: left;"></div> <!-- Pour annuler le flottement à gauche -->
+        <div style="margin: 0 auto; width: 25%; text-align: top;">
+            <img src="{{ asset('images/acceuil1.png') }}" alt="Description de l'image 2" style="top: 130px;">
+        </div>
+        <div style="clear: right;"></div> <!-- Pour annuler le flottement à droite -->
+    </div>
+    <!-- Le reste du contenu de votre page -->
+{% endblock %}
