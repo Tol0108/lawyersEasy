@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\PasswordHasherInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use App\Repository\UsersRepository;
@@ -15,7 +16,7 @@ use App\Entity\Role;
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'Un utilisateur avec cet email existe déjà.')]
-class Users implements UserInterface,
+class Users implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -244,98 +245,105 @@ class Users implements UserInterface,
 
         return $this;
     }
-        #[ORM\OneToMany(mappedBy: 'avocatUser', targetEntity: Avocat::class)]
-        private Collection $userAvocat;
 
-        #[ORM\OneToMany(mappedBy: 'user', targetEntity: Panier::class)]
-        private Collection $user;
+    #[ORM\OneToMany(mappedBy: 'avocatUser', targetEntity: Avocat::class)]
+    private Collection $userAvocat;
 
-        /**
-         * @return Collection<int, Avocat>
-         */
-        public function getUserAvocat(): Collection
-        {
-            return $this->userAvocat;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Panier::class)]
+    private Collection $user;
+
+    /**
+     * @return Collection<int, Avocat>
+     */
+    public function getUserAvocat(): Collection
+    {
+        return $this->userAvocat;
+    }
+
+    public function addUserAvocat(Avocat $userAvocat): static
+    {
+        if (!$this->userAvocat->contains($userAvocat)) {
+            $this->userAvocat->add($userAvocat);
+            $userAvocat->setAvocatUser($this);
         }
-
-        public function addUserAvocat(Avocat $userAvocat): static
-        {
-            if (!$this->userAvocat->contains($userAvocat)) {
-                $this->userAvocat->add($userAvocat);
-                $userAvocat->setAvocatUser($this);
-            }
-
-            return $this;
-        }
-
-        public function removeUserAvocat(Avocat $userAvocat): static
-        {
-            if ($this->userAvocat->removeElement($userAvocat)) {
-                if ($userAvocat->getAvocatUser() === $this) {
-                    $userAvocat->setAvocatUser(null);
-                }
-            }
-
-            return $this;
-        }
-
-        public function getUsername(): string
-        {
-            return $this->email;
-        }
-
-        public function eraseCredentials()
-        {
-            // Si vous stockez des données sensibles temporaires, effacez-les ici
-        }
-
-        public function getUserIdentifier(): string
-        {
-            return $this->email;
-        }
-
-        public function getType(): ?string
-        {
-            return $this->type;
-        }
-
-        public function setType(string $type): self
-        {
-            $this->type = $type;
-
-            return $this;
-        }
-
-
-        /**
-         * @return Collection<int, Panier>
-         */
-        public function getUser(): Collection
-        {
-            return $this->user;
-        }
-
-        public function addUser(Panier $user): static
-        {
-            if (!$this->user->contains($user)) {
-                $this->user->add($user);
-                $user->setUser($this);
-            }
-
-            return $this;
-        }
-
-        public function removeUser(Panier $user): static
-        {
-            if ($this->user->removeElement($user)) {
-                // set the owning side to null (unless already changed)
-                if ($user->getUser() === $this) {
-                    $user->setUser(null);
-                }
-            }
 
         return $this;
     }
-    
+
+    public function removeUserAvocat(Avocat $userAvocat): static
+    {
+        if ($this->userAvocat->removeElement($userAvocat)) {
+            if ($userAvocat->getAvocatUser() === $this) {
+                $userAvocat->setAvocatUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->email;
+    }
+
+    public function eraseCredentials()
+    {
+        // Si vous stockez des données sensibles temporaires, effacez-les ici
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        // Vous pouvez définir les rôles de votre utilisateur ici
+        // Par exemple, si vous avez un champ 'roles' dans votre entité, vous pouvez le renvoyer comme un tableau
+        return ['ROLE_USER'];
+    }
+
+    /**
+     * @return Collection<int, Panier>
+     */
+    public function getUser(): Collection
+    {
+        return $this->user;
+    }
+
+    public function addUser(Panier $user): static
+    {
+        if (!$this->user->contains($user)) {
+            $this->user->add($user);
+            $user->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(Panier $user): static
+    {
+        if ($this->user->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getUser() === $this) {
+                $user->setUser(null);
+            }
+        }
+
+        return $this;
+    }
 }
+
 

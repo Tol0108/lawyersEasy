@@ -56,12 +56,8 @@ class RegistrationFormType extends AbstractType
                 'required' => false,
                 'label'    => 'Actif',
                 // 'data' => true,
-            ])
-            ->add('role', EntityType::class, [
-                'class' => Role::class,
-                'choice_label' => 'name',
-                'label' => 'Rôle :',
             ]);
+            
     }
 
     public function configureOptions(OptionsResolver $resolver)
