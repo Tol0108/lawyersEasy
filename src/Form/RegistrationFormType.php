@@ -27,10 +27,10 @@ class RegistrationFormType extends AbstractType
             ->add('nom', TextType::class)
             ->add('prenom', TextType::class)
             ->add('email', EmailType::class)
-            ->add('Password', PasswordType::class, [
-                'mapped' => false,
-                'attr' =>  ['autocomplete' => 'new-password', 'class' => 'form-control'],  
-            ])
+            ->add('password', PasswordType::class, [ // Utilisez le bon nom de champ ici
+                'mapped' => true, // Assurez-vous que le champ est mappé à l'entité
+                'attr' => ['autocomplete' => 'new-password', 'class' => 'form-control'],
+            ])            
             ->add('telephone', TelType::class, [
                 'required' => false,
             ])

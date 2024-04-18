@@ -24,26 +24,27 @@ class AvocatController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Gestion de l'upload de la photo
-        $file = $form->get('photo')->getData(); // Assurez-vous que 'photo' est le nom du champ dans votre formulaire
-        if ($file) {
-            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-            $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
-
-            // Déplacer le fichier dans le répertoire où les photos sont stockées
-            try {
-                $file->move(
-                    $this->getParameter('photos_directory'),
-                    $newFilename
-                );
-            } catch (FileException $e) {
-                // Gérer l'exception si quelque chose se passe mal pendant l'upload du fichier
-                $this->addFlash('error', 'Problème lors de l\'upload de la photo.');
+            $file = $avocat->getPhotoFile();
+            if ($file) {
+                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+                $uploadsDirectory = $this->getParameter('file_uploads');
+        
+                // Déplacer le fichier dans le répertoire où les photos sont stockées
+                try {
+                    $file->move(
+                        $uploadsDirectory,
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // Gérer l'exception si quelque chose se passe mal pendant l'upload du fichier
+                    $this->addFlash('error', 'Problème lors de l\'upload de la photo.');
+                }
+        
+                // Mise à jour de la propriété 'photo' de l'entité 'Avocat' pour stocker le nom du fichier
+                $avocat->setPhoto($newFilename);
             }
-
-            // Mise à jour de la propriété 'photo' de l'entité 'Avocat' pour stocker le nom du fichier
-            $avocat->setPhoto($newFilename);
-        }
             $entityManager->persist($avocat);
             $entityManager->flush();
 

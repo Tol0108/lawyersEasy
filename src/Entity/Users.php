@@ -10,10 +10,12 @@ use App\Repository\UsersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Role;
+
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'Un utilisateur avec cet email existe déjà.')]
-class Users implements UserInterface, PasswordAuthenticatedUserInterface
+class Users implements UserInterface,
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -50,13 +52,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Reservations::class)]
     private Collection $userreservation;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Registration::class)]
-    private Collection $registrations;
-
-    #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'users')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Role $role;
-
     const TYPE_CLIENT = 'client';
     const TYPE_AVOCAT = 'avocat';
 
@@ -71,7 +66,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         $this->commentaires = new ArrayCollection();
         $this->userreservation = new ArrayCollection();
         $this->userAvocat = new ArrayCollection();
-        $this->registrations = new ArrayCollection();
         $this->user = new ArrayCollection();
     }
 
@@ -224,28 +218,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * Retourne les rôles accordés à l'utilisateur.
-     * 
-     * @return array (e.g. ['ROLE_USER'])
-     */
-
-    public function getRole(): ?Role
-    {
-        return $this->role;
-    }
-
-    public function setRole(?Role $role): self
-    {
-        $this->role = $role;
-
-        return $this;
-    }
-
-    public function getRoles(): array
-    {
-        return $this->role ? [$this->role->getName()] : ['ROLE_USER'];    }
-
     public function getStatus(): ?string
     {
         return $this->status;
@@ -262,136 +234,108 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isActive = false;
 
     public function isActive(): bool
-{
-    return $this->isActive;
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+        #[ORM\OneToMany(mappedBy: 'avocatUser', targetEntity: Avocat::class)]
+        private Collection $userAvocat;
+
+        #[ORM\OneToMany(mappedBy: 'user', targetEntity: Panier::class)]
+        private Collection $user;
+
+        /**
+         * @return Collection<int, Avocat>
+         */
+        public function getUserAvocat(): Collection
+        {
+            return $this->userAvocat;
+        }
+
+        public function addUserAvocat(Avocat $userAvocat): static
+        {
+            if (!$this->userAvocat->contains($userAvocat)) {
+                $this->userAvocat->add($userAvocat);
+                $userAvocat->setAvocatUser($this);
+            }
+
+            return $this;
+        }
+
+        public function removeUserAvocat(Avocat $userAvocat): static
+        {
+            if ($this->userAvocat->removeElement($userAvocat)) {
+                if ($userAvocat->getAvocatUser() === $this) {
+                    $userAvocat->setAvocatUser(null);
+                }
+            }
+
+            return $this;
+        }
+
+        public function getUsername(): string
+        {
+            return $this->email;
+        }
+
+        public function eraseCredentials()
+        {
+            // Si vous stockez des données sensibles temporaires, effacez-les ici
+        }
+
+        public function getUserIdentifier(): string
+        {
+            return $this->email;
+        }
+
+        public function getType(): ?string
+        {
+            return $this->type;
+        }
+
+        public function setType(string $type): self
+        {
+            $this->type = $type;
+
+            return $this;
+        }
+
+
+        /**
+         * @return Collection<int, Panier>
+         */
+        public function getUser(): Collection
+        {
+            return $this->user;
+        }
+
+        public function addUser(Panier $user): static
+        {
+            if (!$this->user->contains($user)) {
+                $this->user->add($user);
+                $user->setUser($this);
+            }
+
+            return $this;
+        }
+
+        public function removeUser(Panier $user): static
+        {
+            if ($this->user->removeElement($user)) {
+                // set the owning side to null (unless already changed)
+                if ($user->getUser() === $this) {
+                    $user->setUser(null);
+                }
+            }
+
+        return $this;
+    }
+    
 }
 
-public function setIsActive(bool $isActive): self
-{
-    $this->isActive = $isActive;
-
-    return $this;
-}
-    #[ORM\OneToMany(mappedBy: 'avocatUser', targetEntity: Avocat::class)]
-    private Collection $userAvocat;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Panier::class)]
-    private Collection $user;
-
-    /**
-     * @return Collection<int, Avocat>
-     */
-    public function getUserAvocat(): Collection
-    {
-        return $this->userAvocat;
-    }
-
-    public function addUserAvocat(Avocat $userAvocat): static
-    {
-        if (!$this->userAvocat->contains($userAvocat)) {
-            $this->userAvocat->add($userAvocat);
-            $userAvocat->setAvocatUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserAvocat(Avocat $userAvocat): static
-    {
-        if ($this->userAvocat->removeElement($userAvocat)) {
-            if ($userAvocat->getAvocatUser() === $this) {
-                $userAvocat->setAvocatUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getUsername(): string
-    {
-        return $this->email;
-    }
-
-    public function eraseCredentials()
-    {
-        // Si vous stockez des données sensibles temporaires, effacez-les ici
-    }
-
-    public function getUserIdentifier(): string
-    {
-        return $this->email;
-    }
-
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    public function setType(string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Registration[]
-     */
-    public function getRegistrations(): Collection
-    {
-        return $this->registrations;
-    }
-
-    public function addRegistration(Registration $registration): self
-    {
-        if (!$this->registrations->contains($registration)) {
-            $this->registrations[] = $registration;
-            $registration->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRegistration(Registration $registration): self
-    {
-        if ($this->registrations->removeElement($registration)) {
-            // set the owning side to null (unless already changed)
-            if ($registration->getUser() === $this) {
-                $registration->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Panier>
-     */
-    public function getUser(): Collection
-    {
-        return $this->user;
-    }
-
-    public function addUser(Panier $user): static
-    {
-        if (!$this->user->contains($user)) {
-            $this->user->add($user);
-            $user->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(Panier $user): static
-    {
-        if ($this->user->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getUser() === $this) {
-                $user->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-}

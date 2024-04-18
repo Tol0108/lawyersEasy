@@ -23,8 +23,11 @@ class AvocatType extends AbstractType
             ])
             ->add('photo', FileType::class, [
                 'label' => 'Photo de l\'avocat',
-                'mapped' => false, // si le champ n'est pas directement lié à la propriété de l'entité
+                'mapped' => false,
                 'required' => false,
+                'attr' => [
+                    'accept' => 'image/jpeg,image/png',
+                ],
             ])
         ;
     }

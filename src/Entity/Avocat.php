@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 
 #[ORM\Entity(repositoryClass: AvocatRepository::class)]
 class Avocat
@@ -29,7 +31,7 @@ class Avocat
     private Collection $commentaires;
 
     #[ORM\Column(type:"string", length: 255, nullable: true)]
-    private $photo;
+    private ?string $photo = null;
 
     public function getId(): ?int
     {
@@ -71,6 +73,9 @@ class Avocat
         return $this;
     }
 
+    /** @var UploadedFile|null */
+    private ?UploadedFile $photoFile = null;
+
     public function getPhoto(): ?string
     {
         return $this->photo;
@@ -79,6 +84,18 @@ class Avocat
     public function setPhoto(?string $photo): self
     {
         $this->photo = $photo;
+
+        return $this;
+    }
+
+    public function getPhotoFile(): ?UploadedFile
+    {
+        return $this->photoFile;
+    }
+
+    public function setPhotoFile(?UploadedFile $photoFile): self
+    {
+        $this->photoFile = $photoFile;
 
         return $this;
     }

@@ -43,8 +43,8 @@ class ReservationType extends AbstractType
                 },
                 'placeholder' => 'Choisir un utilisateur',
                 'required' => true,
-            ])
-        ;
+            ]);
+        
     }
 
     public function configureOptions(OptionsResolver $resolver): void
