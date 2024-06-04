@@ -1,6 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Tableau de Bord Administrateur{% endblock %}
+
 {% block body %}
     <h1>Tableau de Bord Administrateur</h1>
-    {# Ici, ajoutez le contenu du tableau de bord, comme les statistiques, les listes d'utilisateurs, etc. #}
+    <p>Nombre d'utilisateurs: {{ userCount }}</p>
+    <!-- Autres données dynamiques -->
 {% endblock %}

@@ -14,12 +14,12 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ReservationsController extends AbstractController
 {
-    #[Route('/reservation/new/{avocatId}', name: 'reservation_new')] // Ajout de {avocatId} dans la route
-    public function new(Request $request, EntityManagerInterface $entityManager, $avocatId): Response // Ajout de $avocatId en tant que paramètre
+    #[Route('/reservation/new/{userId}', name: 'reservation_new')]
+    public function new(Request $request, EntityManagerInterface $entityManager, $userId): Response
     {
-        $avocat = $entityManager->getRepository(Avocat::class)->find($avocatId);
-        if (!$avocat) {
-            throw $this->createNotFoundException('Avocat non trouvé.');
+        $legalAdvisor = $entityManager->getRepository(Users::class)->find($userId);
+        if (!$legalAdvisor || !$legalAdvisor->isVerified() || $legalAdvisor->getSpecialite() === null) {
+            throw $this->createNotFoundException('Avocat non trouvé ou non vérifié.');
         }
 
         $user = $this->getUser();
@@ -28,12 +28,12 @@ class ReservationsController extends AbstractController
         }
 
         $reservation = new Reservations();
-        $reservation->setAvocat($avocat); // Associer l'avocat à la réservation
+        $reservation->setLegalAdvisor($legalAdvisor); // Associer l'avocat à la réservation
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $reservation->setUser($user);
+            $reservation->setUser($user); // Le client faisant la réservation
             $entityManager->persist($reservation);
             $entityManager->flush();
 

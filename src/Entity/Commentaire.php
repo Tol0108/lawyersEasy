@@ -33,10 +33,6 @@ class Commentaire
     #[ORM\JoinColumn(nullable: false)]
     private ?Users $commentaire_user = null;
 
-    #[ORM\ManyToOne(targetEntity: Avocat::class, inversedBy: 'commentaires')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Avocat $avocat = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -47,10 +43,9 @@ class Commentaire
         return $this->commentaire;
     }
 
-    public function setCommentaire(string $commentaire): static
+    public function setCommentaire(string $commentaire): self
     {
         $this->commentaire = $commentaire;
-
         return $this;
     }
 
@@ -59,10 +54,9 @@ class Commentaire
         return $this->stars;
     }
 
-    public function setStars(int $stars): static
+    public function setStars(int $stars): self
     {
         $this->stars = $stars;
-
         return $this;
     }
 
@@ -71,10 +65,9 @@ class Commentaire
         return $this->validated;
     }
 
-    public function setValidated(int $validated): static
+    public function setValidated(int $validated): self
     {
         $this->validated = $validated;
-
         return $this;
     }
 
@@ -83,10 +76,9 @@ class Commentaire
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): static
+    public function setCreatedAt(\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
-
         return $this;
     }
 
@@ -95,10 +87,9 @@ class Commentaire
         return $this->update_at;
     }
 
-    public function setUpdateAt(?\DateTimeInterface $update_at): static
+    public function setUpdateAt(?\DateTimeInterface $update_at): self
     {
         $this->update_at = $update_at;
-
         return $this;
     }
 
@@ -107,23 +98,10 @@ class Commentaire
         return $this->commentaire_user;
     }
 
-    public function setCommentaireUser(?Users $commentaire_user): static
+    public function setCommentaireUser(?Users $commentaire_user): self
     {
         $this->commentaire_user = $commentaire_user;
-
         return $this;
     }
-
-    public function getAvocat(): ?Avocat
-    {
-        return $this->avocat;
-    }
-
-    public function setAvocat(?Avocat $avocat): self
-    {
-        $this->avocat = $avocat;
-
-        return $this;
-    }
-
 }
+

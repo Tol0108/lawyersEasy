@@ -17,9 +17,9 @@ class Disponibilite
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $startDateTime = null;
 
-    #[ORM\ManyToOne(targetEntity: Avocat::class, inversedBy: 'disponibilites')]
+    #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: 'disponibilites')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Avocat $avocat = null;
+    private ?Users $legalAdvisor = null;
 
     public function getId(): ?int
     {
@@ -38,14 +38,14 @@ class Disponibilite
         return $this;
     }
 
-    public function getAvocat(): ?Avocat
+    public function getLegalAdvisor(): ?Users
     {
-        return $this->avocat;
+        return $this->legalAdvisor;
     }
 
-    public function setAvocat(?Avocat $avocat): self
+    public function setLegalAdvisor(?Users $legalAdvisor): self
     {
-        $this->avocat = $avocat;
+        $this->legalAdvisor = $legalAdvisor;
 
         return $this;
     }

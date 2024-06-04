@@ -22,8 +22,23 @@ class Document
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $chemin = null;
 
+    #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: "documents")]
+    private ?Users $user = null;
+
     #[ORM\ManyToOne(targetEntity: Reservations::class, inversedBy: "documents")]
     private ?Reservations $reservation = null;
+
+    // Getters et setters ajoutés pour user
+    public function getUser(): ?Users
+    {
+        return $this->user;
+    }
+
+    public function setUser(?Users $user): self
+    {
+        $this->user = $user;
+        return $this;
+    }
 
     public function getId(): ?int
     {

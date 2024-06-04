@@ -11,7 +11,6 @@ use App\Repository\UsersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Role;
 
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
@@ -20,74 +19,72 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(length: 60)]
-    private ?string $login = null;
-
-    #[Assert\NotBlank]
-    #[ORM\Column(length: 255)]
-    private ?string $password = null;
-
-    #[ORM\Column(length: 60)]
-    private ?string $nom = null;
-
-    #[ORM\Column(length: 60)]
-    private ?string $prenom = null;
-
-    #[Assert\NotBlank]
-    #[Assert\Email]
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: 'string', length: 255)]
     private ?string $email = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $telephone = null;
+    #[ORM\Column(type: 'string')]
+    private ?string $password = null;
 
-    #[ORM\Column(length: 2, nullable: true)]
-    private ?string $langue = null;
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $nom = null;
 
-    #[ORM\OneToMany(mappedBy: 'commentaire_user', targetEntity: Commentaire::class, cascade: ['persist', 'remove'])]
-    private Collection $commentaires;
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $prenom = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Reservations::class)]
-    private Collection $userreservation;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $adresse = null;
 
-    const TYPE_CLIENT = 'client';
-    const TYPE_AVOCAT = 'avocat';
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $telephone = null;
 
-    #[Assert\Choice(choices: [self::TYPE_CLIENT, self::TYPE_AVOCAT], message: 'Choisissez un type valide.')]
-    private ?string $type = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $licenceNumber = null;
 
-    #[ORM\Column(length: 30)]
-    private ?string $status = null;
+    #[ORM\Column(type: 'boolean')]
+    private bool $isVerified = false;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isActive;
+
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Document::class, cascade: ['persist', 'remove'])]
+    private Collection $documents;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Reservations::class, cascade: ['persist', 'remove'])]
+    private Collection $reservations;
+
+    #[ORM\ManyToOne(targetEntity: Specialite::class, inversedBy: "users")]
+    private ?Specialite $specialite;
 
     public function __construct()
     {
-        $this->commentaires = new ArrayCollection();
-        $this->userreservation = new ArrayCollection();
-        $this->userAvocat = new ArrayCollection();
-        $this->user = new ArrayCollection();
+        $this->documents = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
     }
 
+    // Getters and Setters
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getLogin(): ?string
+    public function getEmail(): ?string
     {
-        return $this->login;
+        return $this->email;
     }
 
-    public function setLogin(string $login): static
+    public function setEmail(string $email): self
     {
-        $this->login = $login;
-
+        $this->email = $email;
         return $this;
     }
 
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -95,7 +92,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): self
     {
         $this->password = $password;
-
         return $this;
     }
 
@@ -104,10 +100,9 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(string $nom): self
     {
         $this->nom = $nom;
-
         return $this;
     }
 
@@ -116,171 +111,136 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->prenom;
     }
 
-    public function setPrenom(string $prenom): static
+    public function setPrenom(string $prenom): self
     {
         $this->prenom = $prenom;
-
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getAdresse(): ?string
     {
-        return $this->email;
+        return $this->adresse;
     }
 
-    public function setEmail(string $email): static
+    public function setAdresse(string $adresse): self
     {
-        $this->email = $email;
-
+        $this->adresse = $adresse;
         return $this;
     }
 
-    public function getTelephone(): ?int
+    public function getTelephone(): ?string
     {
         return $this->telephone;
     }
 
-    public function setTelephone(?int $telephone): static
+    public function setTelephone(string $telephone): self
     {
         $this->telephone = $telephone;
-
         return $this;
     }
 
-    public function getLangue(): ?string
+    public function getSpecialite(): ?Specialite
     {
-        return $this->langue;
+        return $this->specialite;
     }
 
-    public function setLangue(string $langue): static
+    public function setSpecialite(?Specialite $specialite): self
     {
-        $this->langue = $langue;
-
+        $this->specialite = $specialite;
         return $this;
     }
 
-    /**
-     * @return Collection<int, Commentaire>
-     */
-    public function getCommentaire(): Collection
+    public function getLicenceNumber(): ?string
     {
-        return $this->commentaires;
+        return $this->licenceNumber;
     }
 
-    public function addCommentaire(Commentaire $commentaire): static
+    public function setLicenceNumber(?string $licenceNumber): self
     {
-        if (!$this->commentaires->contains($commentaire)) {
-            $this->commentaires[] = $commentaire;
-            $commentaire->setCommentaireUser($this);
-        }
-
+        $this->licenceNumber = $licenceNumber;
         return $this;
     }
 
-    public function removeommentaire(Commentaire $commentaire): self
+    public function isVerified(): bool
     {
-        if ($this->commentaires->removeElement($commentaire)) {
-            // set the owning side to null (unless already changed)
-            if ($commentaire->getCommentaireUser() === $this) {
-                $commentaire->setCommentaireUser(null);
-            }
-        }
+        return $this->isVerified;
+    }
 
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
         return $this;
     }
 
-    /**
-     * @return Collection<int, Reservations>
-     */
-    public function getUserreservation(): Collection
+    public function getIsVerified(): bool
     {
-        return $this->userreservation;
-    }
-
-    public function addUserreservation(Reservations $userreservation): static
-    {
-        if (!$this->userreservation->contains($userreservation)) {
-            $this->userreservation->add($userreservation);
-            $userreservation->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserreservation(Reservations $userreservation): static
-    {
-        if ($this->userreservation->removeElement($userreservation)) {
-            // set the owning side to null (unless already changed)
-            if ($userreservation->getUser() === $this) {
-                $userreservation->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): static
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    #[ORM\Column(type: 'boolean')]
-    private bool $isActive = false;
-
-    public function isActive(): bool
-    {
-        return $this->isActive;
+        return $this->isVerified;
     }
 
     public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
-
         return $this;
     }
 
-    #[ORM\OneToMany(mappedBy: 'avocatUser', targetEntity: Avocat::class)]
-    private Collection $userAvocat;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Panier::class)]
-    private Collection $user;
-
-    /**
-     * @return Collection<int, Avocat>
-     */
-    public function getUserAvocat(): Collection
+    public function getIsActive(): bool
     {
-        return $this->userAvocat;
+        return $this->isActive;
     }
 
-    public function addUserAvocat(Avocat $userAvocat): static
+    public function getDocuments(): Collection
     {
-        if (!$this->userAvocat->contains($userAvocat)) {
-            $this->userAvocat->add($userAvocat);
-            $userAvocat->setAvocatUser($this);
+        return $this->documents;
+    }
+
+    public function addDocument(Document $document): self
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents[] = $document;
+            $document->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeUserAvocat(Avocat $userAvocat): static
+    public function removeDocument(Document $document): self
     {
-        if ($this->userAvocat->removeElement($userAvocat)) {
-            if ($userAvocat->getAvocatUser() === $this) {
-                $userAvocat->setAvocatUser(null);
+        if ($this->documents->removeElement($document)) {
+            if ($document->getUser() === $this) {
+                $document->setUser(null);
             }
         }
 
         return $this;
     }
 
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservations $reservation): self
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations[] = $reservation;
+            $reservation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservations $reservation): self
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            if ($reservation->getUser() === $this) {
+                $reservation->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    // UserInterface methods
     public function getUsername(): string
     {
         return $this->email;
@@ -288,7 +248,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials()
     {
-        // Si vous stockez des données sensibles temporaires, effacez-les ici
     }
 
     public function getUserIdentifier(): string
@@ -296,54 +255,23 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    public function setType(string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
     public function getRoles(): array
     {
-        // Vous pouvez définir les rôles de votre utilisateur ici
-        // Par exemple, si vous avez un champ 'roles' dans votre entité, vous pouvez le renvoyer comme un tableau
-        return ['ROLE_USER'];
+        return $this->roles;
     }
 
-    /**
-     * @return Collection<int, Panier>
-     */
-    public function getUser(): Collection
+    public function setRoles(array $roles): self
     {
-        return $this->user;
-    }
-
-    public function addUser(Panier $user): static
-    {
-        if (!$this->user->contains($user)) {
-            $this->user->add($user);
-            $user->setUser($this);
+        {
+        var_dump($roles);
+        $validRoles = ['ROLE_ADMIN', 'ROLE_CLIENT', 'ROLE_AVOCAT']; // Exemple de rôles valides
+        foreach ($roles as $role) {
+        if (!in_array($role, $validRoles)) {
+            throw new \InvalidArgumentException("Invalid role: $role");
         }
-
+    }
+        $this->roles = $roles;
         return $this;
     }
-
-    public function removeUser(Panier $user): static
-    {
-        if ($this->user->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getUser() === $this) {
-                $user->setUser(null);
-            }
-        }
-
-        return $this;
     }
 }
-
-

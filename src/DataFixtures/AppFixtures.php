@@ -3,7 +3,6 @@
 namespace App\DataFixtures;
 
 use App\Entity\Users;
-use App\Entity\Role;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -19,21 +18,25 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-            // Créez d'abord les rôles et persistez-les
-    $roleAdmin = new Role();
-    $roleAdmin->setName('ROLE_ADMIN');
-    $manager->persist($roleAdmin);
+        $admin = new Users();
+        $admin->setEmail('admin@example.com');
+        $admin->setPassword($this->passwordHasher->hashPassword($admin, 'adminpass'));
+        $admin->setRoles(['ROLE_ADMIN']);
+        $manager->persist($admin);
 
-    $roleAvocat = new Role();
-    $roleAvocat->setName('ROLE_AVOCAT');
-    $manager->persist($roleAvocat);
+        $avocat = new Users();
+        $avocat->setEmail('avocat@example.com');
+        $avocat->setPassword($this->passwordHasher->hashPassword($avocat, 'avocatpass'));
+        $avocat->setRoles(['ROLE_AVOCAT']);
+        $manager->persist($avocat);
 
-    $roleClient = new Role();
-    $roleClient->setName('ROLE_CLIENT');
-    $manager->persist($roleClient);
+        $client = new Users();
+        $client->setEmail('client@example.com');
+        $client->setPassword($this->passwordHasher->hashPassword($client, 'clientpass'));
+        $client->setRoles(['ROLE_CLIENT']);
+        $manager->persist($client);
 
-    // Créez ensuite un utilisateur et attribuez-lui un rôle
-    
-
+        $manager->flush();
+    }
 }
-}
+

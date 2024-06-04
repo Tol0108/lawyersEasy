@@ -27,12 +27,9 @@ class Reservations
     #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: 'reservations')]
     private ?Users $user = null;
 
-    #[ORM\ManyToOne(targetEntity: Avocat::class, inversedBy: 'reservations')]
+    #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: 'legalreservations')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Avocat $avocat = null;
-
-    #[ORM\ManyToOne(targetEntity: Panier::class, inversedBy: 'reservations')]
-    private ?Panier $panier = null;
+    private ?Users $legalAdvisor = null;
 
     public function __construct()
     {
@@ -42,6 +39,17 @@ class Reservations
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUser(): ?Users
+    {
+        return $this->user;
+    }
+
+    public function setUser(?Users $user): self
+    {
+        $this->user = $user;
+        return $this;
     }
 
     public function getDateReservation(): ?\DateTimeInterface
@@ -66,30 +74,15 @@ class Reservations
         return $this;
     }
 
-    public function getUser(): ?Users
+    public function getLegalAdvisor(): ?Users
     {
-        return $this->user;
+        return $this->legalAdvisor;
     }
 
-    public function setUser(?Users $user): self
+    public function setLegalAdvisor(?Users $legalAdvisor): self
     {
-        $this->user = $user;
+        $this->legalAdvisor = $legalAdvisor;
         return $this;
     }
 
-    public function getAvocat(): ?Avocat
-    {
-        return $this->avocat;
-    }
-
-    public function setAvocat(?Avocat $avocat): self
-    {
-        $this->avocat = $avocat;
-        return $this;
-    }
-
-    public function getPanier(): ?Panier
-    {
-        return $this->panier;
-    }
 }

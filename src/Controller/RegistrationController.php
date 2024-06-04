@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Users;
 use App\Form\RegistrationFormType;
-use App\Repository\RoleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,18 +25,30 @@ class RegistrationController extends AbstractController
             $user->setPassword($hashedPassword);
             $user->setIsActive(true);
 
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Inscription réussie ! Vous pouvez maintenant vous connecter.');
-
-            return $this->redirectToRoute('login');
-        } else if ($form->isSubmitted() && !$form->isValid()) {
-            $this->addFlash('error', 'Des erreurs sont présentes dans le formulaire.');
+         // Définir des rôles en fonction des données du formulaire
+         if ($user->getSpecialite()) {
+            $user->setRoles(['ROLE_LAWYER']);
+            $user->setIsVerified(false); // Les avocats doivent être vérifiés après l'inscription
+        } else {
+            $user->setRoles(['ROLE_USER']);
         }
 
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
-        ]);
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Inscription réussie ! Vous pouvez maintenant vous connecter.');
+
+        // Rediriger en fonction du rôle
+        if ($user->getRoles()[0] == 'ROLE_LAWYER') {
+            return $this->redirectToRoute('lawyer_profile_complete');
+        }
+        return $this->redirectToRoute('user_dashboard');
+    } else if ($form->isSubmitted() && !$form->isValid()) {
+        $this->addFlash('error', 'Des erreurs sont présentes dans le formulaire.');
     }
+
+    return $this->render('registration/register.html.twig', [
+        'registrationForm' => $form->createView(),
+    ]);
+}
 }

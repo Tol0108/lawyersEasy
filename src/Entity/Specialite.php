@@ -18,12 +18,12 @@ class Specialite
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\OneToMany(mappedBy: 'specialite', targetEntity: Avocat::class)]
-    private Collection $specialite;
+    #[ORM\OneToMany(mappedBy: 'specialite', targetEntity: Users::class)]
+    private Collection $users;
 
     public function __construct()
     {
-        $this->specialite = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -36,7 +36,7 @@ class Specialite
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(string $nom): self
     {
         $this->nom = $nom;
 
@@ -44,10 +44,31 @@ class Specialite
     }
 
     /**
-     * @return Collection<int, Avocat>
+     * @return Collection<int, Users>
      */
-    public function getspecialite(): Collection
+    public function getUsers(): Collection
     {
-        return $this->specialite;
+        return $this->users;
+    }
+
+    public function addUser(Users $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->setSpecialite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(Users $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            if ($user->getSpecialite() === $this) {
+                $user->setSpecialite(null);
+            }
+        }
+
+        return $this;
     }
 }

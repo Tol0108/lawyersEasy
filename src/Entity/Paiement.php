@@ -26,9 +26,6 @@ class Paiement
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $end_date = null;
 
-    #[ORM\ManyToOne(inversedBy: 'paiementreservation')]
-    private ?AvocatReservation $paiementreservation = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -39,10 +36,9 @@ class Paiement
         return $this->type;
     }
 
-    public function setType(string $type): static
+    public function setType(string $type): self
     {
         $this->type = $type;
-
         return $this;
     }
 
@@ -51,10 +47,9 @@ class Paiement
         return $this->prix;
     }
 
-    public function setPrix(?string $prix): static
+    public function setPrix(?string $prix): self
     {
         $this->prix = $prix;
-
         return $this;
     }
 
@@ -63,10 +58,9 @@ class Paiement
         return $this->start_date;
     }
 
-    public function setStartDate(\DateTimeInterface $start_date): static
+    public function setStartDate(\DateTimeInterface $start_date): self
     {
         $this->start_date = $start_date;
-
         return $this;
     }
 
@@ -75,22 +69,10 @@ class Paiement
         return $this->end_date;
     }
 
-    public function setEndDate(?\DateTimeInterface $end_date): static
+    public function setEndDate(?\DateTimeInterface $end_date): self
     {
         $this->end_date = $end_date;
-
-        return $this;
-    }
-
-    public function getPaiementreservation(): ?AvocatReservation
-    {
-        return $this->paiementreservation;
-    }
-
-    public function setPaiementreservation(?AvocatReservation $paiementreservation): static
-    {
-        $this->paiementreservation = $paiementreservation;
-
         return $this;
     }
 }
+
