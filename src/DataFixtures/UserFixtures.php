@@ -2,40 +2,64 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Users;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use App\Entity\Users;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
-    private $passwordHasher;
+    private UserPasswordHasherInterface $passwordHasher;
 
     public function __construct(UserPasswordHasherInterface $passwordHasher)
     {
         $this->passwordHasher = $passwordHasher;
     }
 
-    public function load(ObjectManager $manager): void
+    public function load(ObjectManager $manager)
     {
-        $userAdmin = new Users();
-        $userAdmin->setEmail('admin@admin.be');
-        $userAdmin->setPassword($this->passwordHasher->hashPassword($userAdmin, '1234'));
-        $userAdmin->setRoles(['ROLE_ADMIN']);
-        $manager->persist($userAdmin);
+        // Utilisateur Admin
+        $admin = new Users();
+        $admin->setEmail('admin@example.com');
+        $admin->setNom('AdminNom');
+        $admin->setPrenom('AdminPrenom');
+        $admin->setAdresse('123 Rue de l\'Admin');
+        $admin->setTelephone('0123456789');
+        $admin->setLicenceNumber(null);
+        $admin->setCodePostal('1000');
+        $admin->setRoles(['ROLE_ADMIN']);
+        $admin->setPassword($this->passwordHasher->hashPassword($admin, 'adminpass'));
+        $manager->persist($admin);
 
-        $userClient = new Users();
-        $userClient->setEmail('client@client.be');
-        $userClient->setPassword($this->passwordHasher->hashPassword($userClient, '1234'));
-        $userClient->setRoles(['ROLE_CLIENT']);
-        $manager->persist($userClient);
+        // Utilisateur Avocat
+        $avocat = new Users();
+        $avocat->setEmail('avocat@example.com');
+        $avocat->setNom('AvocatNom');
+        $avocat->setPrenom('AvocatPrenom');
+        $avocat->setAdresse('456 Rue de l\'Avocat');
+        $avocat->setTelephone('0987654321');
+        $avocat->setLicenceNumber('LIC0001');
+        $avocat->setCodePostal('1050');
+        $avocat->setRoles(['ROLE_AVOCAT']);
+        $avocat->setPassword($this->passwordHasher->hashPassword($avocat, 'avocatpass'));
+        $manager->persist($avocat);
 
-        $userAvocat = new Users();
-        $userAvocat->setEmail('avocat@avocat.be');
-        $userAvocat->setPassword($this->passwordHasher->hashPassword($userAvocat, '1234'));
-        $userAvocat->setRoles(['ROLE_AVOCAT']);
-        $manager->persist($userAvocat);
+        $this->addReference('avocat', $avocat);
 
+        // Utilisateur Client
+        $client = new Users();
+        $client->setEmail('client@example.com');
+        $client->setNom('ClientNom');
+        $client->setPrenom('ClientPrenom');
+        $client->setAdresse('789 Rue du Client');
+        $client->setTelephone('0123456789');
+        $client->setLicenceNumber(null);
+        $client->setCodePostal('1200');
+        $client->setRoles(['ROLE_CLIENT']);
+        $client->setPassword($this->passwordHasher->hashPassword($client, 'clientpass'));
+        $manager->persist($client);
+
+        // Sauvegarder les utilisateurs dans la base de données
         $manager->flush();
     }
 }

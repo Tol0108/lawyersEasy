@@ -12,7 +12,7 @@ class Specialite
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -31,6 +31,12 @@ class Specialite
         return $this->id;
     }
 
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
+
     public function getNom(): ?string
     {
         return $this->nom;
@@ -39,7 +45,6 @@ class Specialite
     public function setNom(string $nom): self
     {
         $this->nom = $nom;
-
         return $this;
     }
 

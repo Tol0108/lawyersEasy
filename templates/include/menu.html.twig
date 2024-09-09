@@ -49,10 +49,8 @@
     }
 
     nav ul {
-        /* Reste de votre CSS pour nav ul */
         display: flex;
         align-items: center; /* Centre les éléments du menu verticalement */
-        /* Autres propriétés */
     }
 
     /* Styles pour les écrans plus petits */
@@ -83,17 +81,16 @@
     }
     </style>
 <nav>
-    <ul>articles
+    <ul>
             <!-- Ajout des onglets fixes -->
             <li><a href="{{ path('home') }}">Accueil</a></li>
-            <li><a href="{{ path('list') }}">Trouver un avocat</a></li>
+            <li><a href="{{ path('avocat_List') }}">Trouver un avocat</a></li>
             <li><a href="#actualites">Actualités</a></li>
             <li><a href="{{ path('articles') }}">Guides Juridiques</a></li>
-            <li><a href="#moncompte">Mon compte</a></li>
+            <li><a href="{{ path('mon_compte') }}">Mon compte</a></li>
             <li class="bouton b"><a href="{{ path('login') }}">Se connecter</a></li>
-            <li class="bouton b"><a href="{{ path('register') }}">Inscription</a></li>
+            <li class="bouton b"><a href="{{ path('app_register') }}">Inscription</a></li>
 
-            <!-- Onglet conditionnel pour les utilisateurs avec le rôle 'ROLE_ADMIN' ou 'ROLE_AVOCAT' -->
             {% if app.user and 'ROLE_ADMIN' in app.user.roles %}
                 <li class="bouton"><a href="{{ path('avocat_new') }}"><i class="fas fa-user-plus"></i> Ajouter un avocat</a></li>
             {% endif %}

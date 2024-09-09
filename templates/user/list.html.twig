@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Liste des Utilisateurs</h1>
+    <div>
+        {% for user in users %}
+            <p>{{ user.nom }} {{ user.prenom }}</p>
+        {% else %}
+            <p>Aucun utilisateur trouvé.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

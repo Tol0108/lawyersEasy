@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Reservations;
 use App\Entity\Users; 
-use App\Entity\Avocat; 
 use App\Form\ReservationType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +17,7 @@ class ReservationsController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager, $userId): Response
     {
         $legalAdvisor = $entityManager->getRepository(Users::class)->find($userId);
-        if (!$legalAdvisor || !$legalAdvisor->isVerified() || $legalAdvisor->getSpecialite() === null) {
+        if (!$legalAdvisor || $legalAdvisor->getSpecialite() === null) {
             throw $this->createNotFoundException('Avocat non trouvé ou non vérifié.');
         }
 

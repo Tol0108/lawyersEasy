@@ -10,6 +10,7 @@ class DocumentFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
+        
         $documents = [
             ['nom_doc' => 'Droit du travail', 'sujet_doc' => 'Probleme au travail', 'chemin' => 'documents/droit_du_travail.pdf'],
             ['nom_doc' => 'Droit de la famille', 'sujet_doc' => 'Probleme familliale', 'chemin' => 'documents/droit_de_la_famille.pdf'],

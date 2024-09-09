@@ -5,10 +5,9 @@ security:
         App\Entity\Users:
             algorithm: argon2id
     role_hierarchy:
-        ROLE_ADMIN:  ROLE_USER
-        ROLE_AVOCAT: ROLE_USER
-        ROLE_CLIENT: ROLE_USER
-        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+        ROLE_ADMIN:  [ROLE_USER, ROLE_ADMIN]
+        ROLE_AVOCAT: [ROLE_USER, ROLE_AVOCAT]
+        ROLE_CLIENT: [ROLE_USER, ROLE_CLIENT]
     providers:
         users_in_database:
             entity:
@@ -24,6 +23,7 @@ security:
             form_login:
                 login_path: login
                 check_path: login
+                default_target_path: home 
             logout:
                 path: logout
                 target: home
@@ -37,7 +37,15 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        
+        # Page accessible par tout le monde (anonymes et connectés)
+        #- { path: ^/home, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        #- { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        #- { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }  # Permettre l'accès à tout le site
+
+
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/profile, roles: ROLE_USER }
 
 when@test:
     security:
@@ -50,4 +58,4 @@ when@test:
                 algorithm: auto
                 cost: 4 # Lowest possible value for bcrypt
                 time_cost: 3 # Lowest possible value for argon
-                memory_cost: 10 # Lowest possible value for argon
+                memory_cost: 3 # Lowest possible value for argon

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordHasherInterface;
@@ -15,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'Un utilisateur avec cet email existe déjà.')]
+
 class Users implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -22,11 +24,14 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
     private ?string $email = null;
-
+    
     #[ORM\Column(type: 'string')]
     private ?string $password = null;
+
+    // #[ORM\Column(type: 'string', length: 255)]
+    // private ?string $login = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $nom = null;
@@ -43,11 +48,13 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $licenceNumber = null;
 
+    #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    private ?string $codePostal = null;
+
+    /*
     #[ORM\Column(type: 'boolean')]
     private bool $isVerified = false;
-
-    #[ORM\Column(type: 'boolean')]
-    private bool $isActive;
+    */
 
     #[ORM\Column(type: 'json')]
     private array $roles = [];
@@ -57,6 +64,13 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Reservations::class, cascade: ['persist', 'remove'])]
     private Collection $reservations;
+
+    /*
+    @Assert\NotBlank(message="Please enter a password")
+    @Assert\Length(min=6, max=4096)
+    */
+
+    private $plainPassword;
 
     #[ORM\ManyToOne(targetEntity: Specialite::class, inversedBy: "users")]
     private ?Specialite $specialite;
@@ -94,6 +108,19 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
         return $this;
     }
+    
+    /*
+    public function getLogin(): ?string
+    {
+        return $this->login;
+    }
+
+    public function setLogin(string $login): self
+    {
+        $this->login = $login;
+        return $this;
+    }
+    */
 
     public function getNom(): ?string
     {
@@ -125,6 +152,17 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAdresse(string $adresse): self
     {
         $this->adresse = $adresse;
+        return $this;
+    }
+
+    public function getCodePostal(): ?string
+    {
+        return $this->codePostal;
+    }
+
+    public function setCodePostal(?string $codePostal): self
+    {
+        $this->codePostal = $codePostal;
         return $this;
     }
 
@@ -161,10 +199,11 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /*
     public function isVerified(): bool
     {
         return $this->isVerified;
-    }
+    }  
 
     public function setIsVerified(bool $isVerified): self
     {
@@ -176,17 +215,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->isVerified;
     }
-
-    public function setIsActive(bool $isActive): self
-    {
-        $this->isActive = $isActive;
-        return $this;
-    }
-
-    public function getIsActive(): bool
-    {
-        return $this->isActive;
-    }
+    */
 
     public function getDocuments(): Collection
     {
@@ -240,11 +269,18 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    // UserInterface methods
-    public function getUsername(): string
+    public function getPlainPassword(): ?string
     {
-        return $this->email;
+        return $this->plainPassword;
     }
+
+    public function setPlainPassword(string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+        return $this;
+    }
+
+    // UserInterface methods
 
     public function eraseCredentials()
     {
@@ -255,23 +291,36 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
+    
     public function getRoles(): array
     {
-        return $this->roles;
+        // Par défaut, chaque utilisateur doit avoir au moins le rôle ROLE_USER
+        $roles = $this->roles;
+        if (!in_array('ROLE_USER', $roles)) {
+            $roles[] = 'ROLE_USER';
+        }
+
+        return array_unique($roles); // Retourne un tableau unique
     }
 
     public function setRoles(array $roles): self
-    {
-        {
-        var_dump($roles);
-        $validRoles = ['ROLE_ADMIN', 'ROLE_CLIENT', 'ROLE_AVOCAT']; // Exemple de rôles valides
+{
+        // Définir les rôles autorisés pour éviter les erreurs
+        /*
+        $validRoles = ['ROLE_ADMIN', 'ROLE_CLIENT', 'ROLE_AVOCAT'];
+
+        // Vérifier chaque rôle avant de l'ajouter
         foreach ($roles as $role) {
-        if (!in_array($role, $validRoles)) {
-            throw new \InvalidArgumentException("Invalid role: $role");
+            if (!in_array($role, $validRoles)) {
+                throw new \InvalidArgumentException("Invalid role: $role");
+            }
         }
-    }
-        $this->roles = $roles;
+        */
+
+        // S'assurer que les rôles sont uniques
+        $this->roles = array_unique($roles);
+
         return $this;
     }
-    }
+    
 }

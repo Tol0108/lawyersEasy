@@ -11,8 +11,6 @@ class RoleController extends AbstractController
     #[Route('/role', name: 'app_role')]
     public function index(): Response
     {
-        return $this->render('role/index.html.twig', [
-            'controller_name' => 'RoleController',
-        ]);
+        return $this->render('role/index.html.twig');
     }
 }

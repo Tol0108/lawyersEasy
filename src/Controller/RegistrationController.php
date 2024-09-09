@@ -13,42 +13,46 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class RegistrationController extends AbstractController
 {
-    #[Route('/register', name: 'register')]
-    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
+    private $entityManager;
+    private $passwordHasher;
+
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher)
     {
-        $user = new Users();
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $passwordHasher->hashPassword($user, $form->get('plainPassword')->getData());
-            $user->setPassword($hashedPassword);
-            $user->setIsActive(true);
-
-         // Définir des rôles en fonction des données du formulaire
-         if ($user->getSpecialite()) {
-            $user->setRoles(['ROLE_LAWYER']);
-            $user->setIsVerified(false); // Les avocats doivent être vérifiés après l'inscription
-        } else {
-            $user->setRoles(['ROLE_USER']);
-        }
-
-        $entityManager->persist($user);
-        $entityManager->flush();
-
-        $this->addFlash('success', 'Inscription réussie ! Vous pouvez maintenant vous connecter.');
-
-        // Rediriger en fonction du rôle
-        if ($user->getRoles()[0] == 'ROLE_LAWYER') {
-            return $this->redirectToRoute('lawyer_profile_complete');
-        }
-        return $this->redirectToRoute('user_dashboard');
-    } else if ($form->isSubmitted() && !$form->isValid()) {
-        $this->addFlash('error', 'Des erreurs sont présentes dans le formulaire.');
+        $this->entityManager = $entityManager;
+        $this->passwordHasher = $passwordHasher;
     }
 
-    return $this->render('registration/register.html.twig', [
-        'registrationForm' => $form->createView(),
-    ]);
-}
+    #[Route('/register', name: 'app_register')]
+    public function register(Request $request): Response
+{
+    $user = new Users();
+    $form = $this->createForm(RegistrationFormType::class, $user);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Récupérer le mot de passe en clair
+        $plainPassword = $form->get('plainPassword')->getData();
+
+        // Hacher le mot de passe
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $user,
+            $plainPassword
+        );
+            $user->setPassword($hashedPassword);  // Mettre à jour le mot de passe haché
+
+            // Ajouter le rôle par défaut ROLE_USER
+            $user->setRoles(['ROLE_USER']);
+
+            // Sauvegarder l'utilisateur
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+
+            // Rediriger ou montrer un message de succès
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('registration/register.html.twig', [
+            'registrationForm' => $form->createView(),
+        ]);
+    }
 }

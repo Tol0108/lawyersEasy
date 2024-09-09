@@ -1,46 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="form-container">
-        <h1>Ajouter un nouvel avocat</h1>
-
-        {{ form_start(form) }}
-            <div class="form-group">
-                {{ form_row(form.nom) }}
-            </div>
-            <div class="form-group">
-                {{ form_row(form.specialite) }}
-            </div>
-            <div class="form-group">
-                {{ form_row(form.photo) }}
-            </div>
-            <button class="submit">{{ button_label|default('Enregistrer') }}</button>
-        {{ form_end(form) }}
-    </div>
-
-    <style>
-        .form-container {
-            margin-top: 40px; /* Espace en haut du formulaire */
-            padding: 20px; /* Espace interne au formulaire */
-            background-color: #f8f9fa; /* Couleur de fond */
-            border-radius: 5px; /* Bords arrondis */
-        }
-
-        .form-group {
-            margin-bottom: 15px; /* Espace entre les champs */
-        }
-
-        .submit {
-            background-color: #007bff; /* Couleur de fond du bouton */
-            color: white; /* Couleur du texte du bouton */
-            padding: 10px 20px; /* Padding du bouton */
-            border: none; /* Pas de bordure */
-            border-radius: 5px; /* Bords arrondis du bouton */
-            cursor: pointer; /* Curseur en forme de main */
-        }
-
-        .submit:hover {
-            background-color: #0056b3; /* Couleur de fond du bouton au survol */
-        }
-    </style>
+    <h1>Ajouter un nouvel avocat</h1>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit">Enregistrer</button>
+    {{ form_end(form) }}
 {% endblock %}

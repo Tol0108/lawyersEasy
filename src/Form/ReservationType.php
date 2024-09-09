@@ -22,7 +22,7 @@ class ReservationType extends AbstractType
             // 'format' => 'yyyy-MM-dd HH:mm', // Format à ajuster
             ])
             ->add('avocat', EntityType::class, [
-                'class' => Avocat::class,
+                'class' => Users::class,
                 'choice_label' => 'nom',
             
             ])

@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Utilisateur{% endblock %}
+
+{% block body %}
+<h1>Modifier l'utilisateur</h1>
+
+    {{ form_row(userForm.email) }}
+            {{ form_row(userForm.login) }}
+            {{ form_row(userForm.nom) }}
+            {{ form_row(userForm.prenom) }}
+            {{ form_row(userForm.adresse) }}
+            {{ form_row(userForm.telephone) }}
+            {{ form_row(userForm.licenceNumber) }}
+            {{ form_row(userForm.isVerified) }}
+            {{ form_row(userForm.roles) }}
+            {{ form_row(userForm.specialite) }}
+            {{ form_row(userForm.plainPassword) }}
+        
+        <button type="submit" class="btn btn-primary">Sauvegarder</button>
+    {{ form_end(userForm) }}
+{% endblock %}

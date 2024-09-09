@@ -1,13 +1,82 @@
-<head>
-<style>
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-    .language-selector {
-        margin-right: 20px;
-    }
-</style>
-</head>
+.language-selector {
+    margin-right: 20px;
+}
+
+.form-control {
+    width: 300px; /* Réduit la largeur des champs d'input */
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+}
+
+/* Formulaire d'inscription */
+.registration-form {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.registration-form .form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    width: 150px; /* Largeur des labels */
+    margin-right: 10px; /* Espace entre le label et le champ */
+}
+
+.form-container {
+    margin-top: 40px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.registration-form .form-group,
+.registration-form .form-control {
+    margin-bottom: 20px;
+}
+
+.registration-form div {
+    margin-bottom: 20px;
+}
+
+.registration-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.registration-form button {
+    margin-top: 20px; /* Ajoute un espace au-dessus du bouton */
+}
+
+.registration-form input[type="text"],
+.registration-form input[type="password"],
+.registration-form input[type="email"],
+.registration-form select,
+.registration-form textarea {
+    margin-top: 5px;
+}
+
+/* Styles spécifiques pour l'affichage météo */
+.weather-container {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #e7e7e7;
+    border-radius: 5px;
+}

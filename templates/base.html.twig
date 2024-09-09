@@ -5,51 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Avocats & Facile</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-    <style>
-        .registration-form {
-            margin-top: 40px;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
-        }
-
-        .registration-form .form-group {
-            margin-bottom: 15px;
-        }
-        .form-container {
-            margin-top: 40px;
-        }
-
-        .registration-form .form-group,
-        .registration-form .form-control {
-            margin-bottom: 20px;
-        }
-
-        .registration-form div {
-            margin-bottom: 20px;
-        }
-
-        .registration-form label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .registration-form input[type="text"],
-        .registration-form input[type="password"],
-        .registration-form input[type="email"],
-        .registration-form select,
-        .registration-form textarea {
-            margin-top: 5px;
-        }
-
-        /* Styles spécifiques pour l'affichage météo */
-        .weather-container {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #e7e7e7;
-            border-radius: 5px;
-        }
-    </style>
+    {% block stylesheets %}
+        <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    {% endblock %}
 </head>
 <body>
     <header>
@@ -59,6 +17,16 @@
     <nav>
         {% include "include/menu.html.twig" %}
     </nav>
+
+    <div class="container mt-3">
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+</div>
+
 
     <main>
         {% block body %}

@@ -11,8 +11,6 @@ class OneOfYourCrudController extends AbstractController
     #[Route('/one/of/your/crud', name: 'app_one_of_your_crud')]
     public function index(): Response
     {
-        return $this->render('one_of_your_crud/index.html.twig', [
-            'controller_name' => 'OneOfYourCrudController',
-        ]);
+        return $this->render('one_of_your_crud/index.html.twig');   
     }
 }
