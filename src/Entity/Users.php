@@ -2,17 +2,14 @@
 
 namespace App\Entity;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\PasswordHasherInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use App\Repository\UsersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'Un utilisateur avec cet email existe déjà.')]
@@ -51,11 +48,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
     private ?string $codePostal = null;
 
-    /*
-    #[ORM\Column(type: 'boolean')]
-    private bool $isVerified = false;
-    */
-
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
@@ -65,15 +57,13 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Reservations::class, cascade: ['persist', 'remove'])]
     private Collection $reservations;
 
-    /*
-    @Assert\NotBlank(message="Please enter a password")
-    @Assert\Length(min=6, max=4096)
-    */
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: Avocat::class, cascade: ['persist', 'remove'])]
+    private ?Avocat $avocat = null;
 
-    private $plainPassword;
-
-    #[ORM\ManyToOne(targetEntity: Specialite::class, inversedBy: "users")]
-    private ?Specialite $specialite;
+    /**
+     * @Assert\NotBlank(groups={"create"})
+     */
+    private ?string $plainPassword = null;
 
     public function __construct()
     {
@@ -82,6 +72,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     // Getters and Setters
+
     public function getId(): ?int
     {
         return $this->id;
@@ -108,19 +99,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
         return $this;
     }
-    
-    /*
-    public function getLogin(): ?string
-    {
-        return $this->login;
-    }
-
-    public function setLogin(string $login): self
-    {
-        $this->login = $login;
-        return $this;
-    }
-    */
 
     public function getNom(): ?string
     {
@@ -149,7 +127,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->adresse;
     }
 
-    public function setAdresse(string $adresse): self
+    public function setAdresse(?string $adresse): self
     {
         $this->adresse = $adresse;
         return $this;
@@ -171,20 +149,9 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->telephone;
     }
 
-    public function setTelephone(string $telephone): self
+    public function setTelephone(?string $telephone): self
     {
         $this->telephone = $telephone;
-        return $this;
-    }
-
-    public function getSpecialite(): ?Specialite
-    {
-        return $this->specialite;
-    }
-
-    public function setSpecialite(?Specialite $specialite): self
-    {
-        $this->specialite = $specialite;
         return $this;
     }
 
@@ -198,24 +165,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         $this->licenceNumber = $licenceNumber;
         return $this;
     }
-
-    /*
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }  
-
-    public function setIsVerified(bool $isVerified): self
-    {
-        $this->isVerified = $isVerified;
-        return $this;
-    }
-
-    public function getIsVerified(): bool
-    {
-        return $this->isVerified;
-    }
-    */
 
     public function getDocuments(): Collection
     {
@@ -274,16 +223,34 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->plainPassword;
     }
 
-    public function setPlainPassword(string $plainPassword): self
+    public function setPlainPassword(?string $plainPassword): self
     {
         $this->plainPassword = $plainPassword;
         return $this;
     }
 
-    // UserInterface methods
+    public function getAvocat(): ?Avocat
+    {
+        return $this->avocat;
+    }
+
+    public function setAvocat(?Avocat $avocat): self
+    {
+        $this->avocat = $avocat;
+
+        // Mettre à jour l'avocat pour refléter cette relation
+        if ($avocat && $avocat->getUser() !== $this) {
+            $avocat->setUser($this);
+        }
+
+        return $this;
+    }
+
+    // Méthodes de l'interface UserInterface
 
     public function eraseCredentials()
     {
+        // Si vous stockez des données sensibles temporaires, effacez-les ici
     }
 
     public function getUserIdentifier(): string
@@ -291,36 +258,20 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    
     public function getRoles(): array
     {
-        // Par défaut, chaque utilisateur doit avoir au moins le rôle ROLE_USER
         $roles = $this->roles;
         if (!in_array('ROLE_USER', $roles)) {
             $roles[] = 'ROLE_USER';
         }
 
-        return array_unique($roles); // Retourne un tableau unique
+        return array_unique($roles);
     }
 
     public function setRoles(array $roles): self
-{
-        // Définir les rôles autorisés pour éviter les erreurs
-        /*
-        $validRoles = ['ROLE_ADMIN', 'ROLE_CLIENT', 'ROLE_AVOCAT'];
-
-        // Vérifier chaque rôle avant de l'ajouter
-        foreach ($roles as $role) {
-            if (!in_array($role, $validRoles)) {
-                throw new \InvalidArgumentException("Invalid role: $role");
-            }
-        }
-        */
-
-        // S'assurer que les rôles sont uniques
+    {
         $this->roles = array_unique($roles);
 
         return $this;
     }
-    
 }

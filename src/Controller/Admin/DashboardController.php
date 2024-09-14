@@ -2,34 +2,40 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Avocat;
+use App\Entity\Users;
+use App\Controller\Admin\AvocatCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use App\Entity\Users;
+use Symfony\Bundle\SecurityBundle\Attribute\IsGranted;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
+use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 
+#[Route('/admin')]
+#[IsGranted('ROLE_ADMIN')]
 class DashboardController extends AbstractDashboardController
 {
-    private Security $security;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(Security $security, EntityManagerInterface $entityManager)
-    {
-        $this->security = $security;
-        $this->entityManager = $entityManager;
-    }
-
     #[Route('/admin', name: 'admin')]
-    #[IsGranted('ROLE_ADMIN')]
     public function index(): Response
     {
-        $userCount = $this->entityManager->getRepository(Users::class)->count([]);
+        // Redirection vers la page CRUD de l'entité Avocat
+        $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
 
-        return $this->render('admin/dashboard.html.twig', [
-            'userCount' => $userCount
-        ]);
+        return $this->redirect($adminUrlGenerator->setController(AvocatCrudController::class)->generateUrl());
+    }
+
+    public function configureDashboard(): Dashboard
+    {
+        return Dashboard::new()
+            ->setTitle('Votre Application');
+    }
+
+    public function configureMenuItems(): iterable
+    {
+        yield MenuItem::linktoDashboard('Tableau de bord', 'fa fa-home');
+        yield MenuItem::linkToCrud('Avocats', 'fa fa-gavel', Avocat::class);
+        yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-users', Users::class);
     }
 }
-

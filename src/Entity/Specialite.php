@@ -21,9 +21,13 @@ class Specialite
     #[ORM\OneToMany(mappedBy: 'specialite', targetEntity: Users::class)]
     private Collection $users;
 
+    #[ORM\OneToMany(mappedBy: 'specialite', targetEntity: Avocat::class)]
+    private Collection $user;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->user = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -75,5 +79,13 @@ class Specialite
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Avocat>
+     */
+    public function getUser(): Collection
+    {
+        return $this->user;
     }
 }
