@@ -14,6 +14,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
+
 class AvocatController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
@@ -34,9 +35,8 @@ class AvocatController extends AbstractController
         ]);
     }
 
-    /**
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
-     */
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+
     #[Route('/avocat/new', name: 'avocat_new', methods: ['GET', 'POST'])]
     public function new(Request $request, SluggerInterface $slugger): Response
     {

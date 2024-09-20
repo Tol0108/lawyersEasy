@@ -5,9 +5,66 @@
 {% block body %}
     <h1>Créer une nouvelle réservation</h1>
 
-    {{ form_start(reservationForm) }}
-    {# ... autres champs ... #}
-    {{ form_row(reservationForm.date_reservation) }}
+    {{ form_start(reservationForm, {'attr': {'class': 'reservation-form'}}) }}
+    {{ form_row(reservationForm.date_reservation, {
+        'attr': {'class': 'js-datepicker'}
+    }) }}
+    
+    <div id="time-slots" style="display: none;">
+        <label for="time-slot">Sélectionnez l'heure :</label>
+        <select id="time-slot" name="time-slot">
+            <!-- Les créneaux horaires seront ajoutés ici par JavaScript -->
+        </select>
+    </div>
+
     <button type="submit">Réserver</button>
-{{ form_end(reservationForm) }}
+    {{ form_end(reservationForm) }}
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr('.js-datepicker', {
+                dateFormat: "Y-m-d",
+                minDate: "today",
+                disable: [
+                    function(date) {
+                        // Disable every Saturday and Sunday
+                        return (date.getDay() === 0 || date.getDay() === 6);
+                    }
+                ],
+                locale: {
+                    firstDayOfWeek: 1 // Start week on Monday
+                },
+                onChange: function(selectedDates, dateStr, instance) {
+                    // Show the time slots dropdown after selecting a date
+                    document.getElementById('time-slots').style.display = 'block';
+
+                    // Clear previous options
+                    var timeSlotSelect = document.getElementById('time-slot');
+                    timeSlotSelect.innerHTML = '';
+
+                    // Add morning slots
+                    for (var hour = 9; hour <= 11; hour++) {
+                        addTimeSlotOption(timeSlotSelect, hour, 0);
+                        addTimeSlotOption(timeSlotSelect, hour, 30);
+                    }
+
+                    // Add afternoon slots
+                    for (var hour = 13; hour <= 14; hour++) {
+                        addTimeSlotOption(timeSlotSelect, hour, 0);
+                        addTimeSlotOption(timeSlotSelect, hour, 30);
+                    }
+                }
+            });
+
+            function addTimeSlotOption(selectElement, hour, minutes) {
+                var option = document.createElement('option');
+                var hourStr = hour < 10 ? '0' + hour : hour;
+                var minuteStr = minutes < 10 ? '0' + minutes : minutes;
+                option.value = hourStr + ':' + minuteStr;
+                option.text = hourStr + ':' + minuteStr;
+                selectElement.add(option);
+            }
+        });
+    </script>
 {% endblock %}

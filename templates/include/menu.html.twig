@@ -82,18 +82,19 @@
     </style>
 <nav>
     <ul>
-            <!-- Ajout des onglets fixes -->
-            <li><a href="{{ path('home') }}">Accueil</a></li>
-            <li><a href="{{ path('avocat_list') }}">Trouver un avocat</a></li>
-            <li><a href="{{ path('avocat_new') }}">Rajouter un avocat</a></li>
-            <li><a href="#actualites">Actualités</a></li>
-            <li><a href="{{ path('articles') }}">Guides Juridiques</a></li>
+        <li><a href="{{ path('home') }}">Accueil</a></li>
+        <li><a href="{{ path('avocat_list') }}">Trouver un avocat</a></li>
+        <li><a href="#actualites">Actualités</a></li>
+        <li><a href="{{ path('articles') }}">Guides Juridiques</a></li>
+        {% if app.user %}
             <li><a href="{{ path('mon_compte') }}">Mon compte</a></li>
-            <li class="bouton b"><a href="{{ path('login') }}">Se connecter</a></li>
-            <li class="bouton b"><a href="{{ path('app_register') }}">Inscription</a></li>
-
-            {% if app.user and 'ROLE_ADMIN' in app.user.roles %}
+            <li class="bouton"><a href="{{ path('logout') }}">Se déconnecter</a></li>
+            {% if 'ROLE_ADMIN' in app.user.roles %}
                 <li class="bouton"><a href="{{ path('avocat_new') }}"><i class="fas fa-user-plus"></i> Ajouter un avocat</a></li>
             {% endif %}
+        {% else %}
+            <li class="bouton b"><a href="{{ path('login') }}">Se connecter</a></li>
+            <li class="bouton b"><a href="{{ path('app_register') }}">Inscription</a></li>
+        {% endif %}
     </ul>
 </nav>

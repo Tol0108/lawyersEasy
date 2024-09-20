@@ -14,12 +14,16 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 
 #[Route('/admin')]
-#[IsGranted('ROLE_ADMIN')]
 class DashboardController extends AbstractDashboardController
 {
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
+        // Vérifier si l'utilisateur a le rôle ROLE_ADMIN
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException();
+        }
+        
         // Redirection vers la page CRUD de l'entité Avocat
         $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
 

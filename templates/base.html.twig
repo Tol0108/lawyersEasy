@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avocats & Facile</title>
+    <title>{% block title %}Avocats & Facile{% endblock %}</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     {% block stylesheets %}
         <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
     {% endblock %}
 </head>
 <body>
@@ -19,36 +20,22 @@
     </nav>
 
     <div class="container mt-3">
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success">{{ message }}</div>
-    {% endfor %}
-    {% for message in app.flashes('error') %}
-        <div class="alert alert-danger">{{ message }}</div>
-    {% endfor %}
-</div>
-
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+    </div>
 
     <main>
-        {% block body %}
-            <!-- Le contenu spécifique de chaque page sera inséré ici -->
-
-            <!-- Code HTML pour afficher les informations météorologiques -->
-            <div class="weather-container">
-                <h2>Météo pour {{ weatherData.name }}</h2>
-                <p>Conditions actuelles : {{ weatherData.weather[0].description }}</p>
-                <p>Température actuelle : {{ weatherData.main.temp }}°C</p>
-                <p>Humidité : {{ weatherData.main.humidity }}%</p>
-                <p>Pression atmosphérique : {{ weatherData.main.pressure }} hPa</p>
-            </div>
-            <!-- Fin du code HTML pour afficher les informations météorologiques -->
-
-        {% endblock %}
+        {% block body %}{% endblock %}
     </main>
 
     {% include "include/footer.html.twig" %}
     {% include "include/flash.html.twig" %}
 
     <!-- Vos scripts JavaScript ici -->
-
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 </html>

@@ -35,9 +35,10 @@ class UsersCrudController extends AbstractCrudController
             TextField::new('nom'),
             TextField::new('prenom'),
             ArrayField::new('roles'),
-            PasswordField::new('plainPassword')
+            TextField::new('plainPassword')
                 ->onlyOnForms()
-                ->setRequired($pageName === Crud::PAGE_NEW),
+                ->setRequired($pageName === Crud::PAGE_NEW)
+                ->setFormTypeOption('attr.type', 'password'),
         ];
     }
 

@@ -1,14 +1,15 @@
 parameters:
     photos_directory: '%kernel.project_dir%/public/uploads/photos'
     cloudconvert_api_key: 'TRE_CLE_API_CLOUDCONVERT'
+    documents_directory: '%kernel.project_dir%/public/uploads/documents'
+
 
 services:
-    # configuration par défaut pour les services dans *ce* fichier
     _defaults:
         autowire: true
         autoconfigure: true
         bind:
-            $photosDirectory: '%photos_directory%'  # Injection du paramètre dans les services
+            $photosDirectory: '%photos_directory%' 
 
     # rend les classes dans src/ disponibles pour être utilisées comme services
     # cela crée un service par classe dont l'id est le nom complet de la classe

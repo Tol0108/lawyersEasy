@@ -1,0 +1,14 @@
+.reservation-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.reservation-form label,
+.reservation-form input,
+.reservation-form select,
+.reservation-form button {
+    margin-bottom: 15px;
+    width: 100%;
+}
