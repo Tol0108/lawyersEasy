@@ -15,10 +15,6 @@
         {% include "include/header.html.twig" %}
     </header>
 
-    <nav>
-        {% include "include/menu.html.twig" %}
-    </nav>
-
     <div class="container mt-3">
         {% for message in app.flashes('success') %}
             <div class="alert alert-success">{{ message }}</div>
@@ -29,13 +25,23 @@
     </div>
 
     <main>
-        {% block body %}{% endblock %}
+        {% block body %}
+            <!-- Conteneur pour le calendrier FullCalendar si nécessaire -->
+            <div id="calendar"></div>
+        {% endblock %}
     </main>
 
     {% include "include/footer.html.twig" %}
     {% include "include/flash.html.twig" %}
 
-    <!-- Vos scripts JavaScript ici -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- Scripts JS globaux -->
+    {% block javascripts %}
+        <script src="{{ asset('build/app.js') }}"></script>
+        {% block fullcalendar %}
+            <!-- Inclure FullCalendar et autres scripts si nécessaire -->
+            <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        {% endblock %}
+    {% endblock %}
 </body>
 </html>
+ 

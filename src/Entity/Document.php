@@ -25,7 +25,8 @@ class Document
     #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: "documents")]
     private ?Users $user = null;
 
-    #[ORM\ManyToOne(targetEntity: Reservations::class, inversedBy: "documents")]
+    #[ORM\ManyToOne(targetEntity: Reservations::class, inversedBy: 'documents')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Reservations $reservation = null;
 
     // Getters et setters ajoutés pour user

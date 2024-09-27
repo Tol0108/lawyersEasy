@@ -12,8 +12,8 @@ class SpecialiteFixtures extends Fixture
     {
         $specialites = [
             'Droit des assurances',
-            'Droit des bancaire et boursier',
-            'Droit des commercial',
+            'Droit des données bancaire',
+            'Droit commercial',
             'Droit des crédit et de la consommation',
             'Droit des enfants',
             'Droit de l environnement',
@@ -25,20 +25,21 @@ class SpecialiteFixtures extends Fixture
             'Droit public',
             'Droit de la santé',
             'Droit des sociétés',
-            'Droit des sport',
-            'Droit des transport',
+            'Droit des sports',
+            'Droit des transports',
             'Droit du travail',
-            'Droit de la protection des donées personnelles',
-            
+            'Droit de la protection des donées personnelles',  
         ];
 
-        foreach ($specialites as $nom) {
+        foreach ($specialites as $index => $nom) {
             $specialite = new Specialite();
             $specialite->setNom($nom);
-
+        
             $manager->persist($specialite);
-        }
-
+        
+            // Ajouter une référence pour l'utiliser dans d'autres fixtures
+            $this->addReference('specialite_' . $index, $specialite);
+        }        
         $manager->flush();
     }
 }

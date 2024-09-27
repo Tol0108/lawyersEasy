@@ -22,23 +22,6 @@ class ReservationType extends AbstractType
                 'widget' => 'single_text',
                 'html5' => false,
                 'attr' => ['class' => 'js-datepicker'],
-                 // 'format' => 'yyyy-MM-dd HH:mm',
-            ])
-            ->add('status', ChoiceType::class, [
-                'choices' => [
-                    'En attente' => 'en attente',
-                    'Confirmé' => 'confirmé',
-                    'Annulé' => 'annulé',
-                ],
-                'required' => true,
-            ])
-            ->add('user', EntityType::class, [
-                'class' => Users::class,
-                'choice_label' => function (Users $user) {
-                    return $user->getEmail(); 
-                },
-                'placeholder' => 'Choisir un utilisateur',
-                'required' => true,
             ])
             ->add('documents', FileType::class, [
                 'label' => 'Télécharger des documents',

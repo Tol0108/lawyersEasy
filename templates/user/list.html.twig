@@ -1,12 +1,27 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Liste des Utilisateurs</h1>
-    <div>
-        {% for user in users %}
-            <p>{{ user.nom }} {{ user.prenom }}</p>
+    <h1>Liste des Avocats</h1>
+    <div class="users-list">
+        {% if avocats|length > 0 %}
+            {% for avocat in avocats %}
+                <div class="user-card">
+                    {% if avocat.photo %}
+                        <img src="{{ asset('uploads/photos/' ~ avocat.photo) }}" alt="Photo de {{ avocat.nom }}" class="user-photo">
+                    {% else %}
+                        <p>Aucune photo disponible.</p>
+                    {% endif %}
+                    <div class="user-info">
+                        <h2>Maître {{ avocat.nom|default('Non spécifié') }} {{ avocat.prenom|default('') }}</h2>
+                        <p>Adresse : {{ avocat.adresse|default('Non spécifiée') }}</p>
+                        <p>Téléphone : {{ avocat.telephone|default('Non spécifié') }}</p>
+                        <p>Spécialité : {{ avocat.specialite.nom|default('Non spécifiée') }}</p>
+                        <a href="{{ path('reservation_new', {'userId': avocat.id}) }}" class="btn btn-primary">Prendre rendez-vous</a>
+                    </div>
+                </div>
+            {% endfor %}
         {% else %}
-            <p>Aucun utilisateur trouvé.</p>
-        {% endfor %}
+            <p>Aucun avocat trouvé.</p>
+        {% endif %}
     </div>
 {% endblock %}

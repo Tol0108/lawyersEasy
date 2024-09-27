@@ -31,7 +31,7 @@ class AccountController extends AbstractController
         }
     }
 
-    #[Route("/mon-compte", name: "mon_compte")]
+    #[Route("/recap", name: "recap")]
     public function index(Request $request, SluggerInterface $slugger, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = $this->getUser();
@@ -52,7 +52,7 @@ class AccountController extends AbstractController
             $this->addFlash('success', 'Vos informations ont été mises à jour.');
         }
 
-        return $this->render('account/index.html.twig', [
+        return $this->render('moncompte/recap.html.twig', [
             'user' => $user,
             'reservations' => $reservations,
             'form' => $form->createView(),

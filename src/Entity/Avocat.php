@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\AvocatRepository;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Users;
-use App\Entity\Specialite;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-#[ORM\Entity(repositoryClass: AvocatRepository::class)]
+#[ORM\Entity]
+#[Vich\Uploadable]
 class Avocat
 {
     #[ORM\Id]
@@ -15,27 +16,55 @@ class Avocat
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $nom = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $prenom = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $adresse = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $codePostal = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $telephone = null;
 
     #[ORM\ManyToOne(targetEntity: Specialite::class)]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Specialite $specialite = null;
 
-    #[ORM\OneToOne(targetEntity: Users::class, inversedBy: 'avocat', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Users $user = null;
-
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $photo = null;
+    private ?string $photo = null;  // Stocke le chemin du fichier
 
-    // Getters and Setters
+    // Getters et setters
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): self
+    {
+        $this->nom = $nom;
+        return $this;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): self
+    {
+        $this->prenom = $prenom;
+        return $this;
     }
 
     public function getAdresse(): ?string
@@ -46,7 +75,17 @@ class Avocat
     public function setAdresse(?string $adresse): self
     {
         $this->adresse = $adresse;
+        return $this;
+    }
 
+    public function getCodePostal(): ?string
+    {
+        return $this->codePostal;
+    }
+
+    public function setCodePostal(?string $codePostal): self
+    {
+        $this->codePostal = $codePostal;
         return $this;
     }
 
@@ -58,7 +97,6 @@ class Avocat
     public function setTelephone(?string $telephone): self
     {
         $this->telephone = $telephone;
-
         return $this;
     }
 
@@ -70,24 +108,6 @@ class Avocat
     public function setSpecialite(?Specialite $specialite): self
     {
         $this->specialite = $specialite;
-
-        return $this;
-    }
-
-    public function getUser(): ?Users
-    {
-        return $this->user;
-    }
-
-    public function setUser(?Users $user): self
-    {
-        $this->user = $user;
-
-        // Mettre à jour l'utilisateur pour refléter cette relation
-        if ($user && $user->getAvocat() !== $this) {
-        $user->setAvocat($this);
-        }
-
         return $this;
     }
 
@@ -99,7 +119,6 @@ class Avocat
     public function setPhoto(?string $photo): self
     {
         $this->photo = $photo;
-
         return $this;
     }
 }

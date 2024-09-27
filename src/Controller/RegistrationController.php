@@ -24,30 +24,32 @@ class RegistrationController extends AbstractController
 
     #[Route('/register', name: 'app_register')]
     public function register(Request $request): Response
-{
-    $user = new Users();
-    $form = $this->createForm(RegistrationFormType::class, $user);
-    $form->handleRequest($request);
+    {
+        $user = new Users();
+        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        // Récupérer le mot de passe en clair
-        $plainPassword = $form->get('plainPassword')->getData();
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Récupérer le mot de passe en clair
+            $plainPassword = $form->get('plainPassword')->getData();
 
-        // Hacher le mot de passe
-        $hashedPassword = $this->passwordHasher->hashPassword(
-            $user,
-            $plainPassword
-        );
-            $user->setPassword($hashedPassword);  // Mettre à jour le mot de passe haché
+            // Hacher le mot de passe
+            $hashedPassword = $this->passwordHasher->hashPassword(
+                $user,
+                $plainPassword
+            );
+            
+            // Mettre à jour le mot de passe haché
+            $user->setPassword($hashedPassword);
 
             // Ajouter le rôle par défaut ROLE_USER
             $user->setRoles(['ROLE_USER']);
 
-            // Sauvegarder l'utilisateur
+            // Sauvegarder l'utilisateur dans la base de données
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
-            // Rediriger ou montrer un message de succès
+            // Rediriger vers une autre page ou afficher un message de succès
             return $this->redirectToRoute('home');
         }
 

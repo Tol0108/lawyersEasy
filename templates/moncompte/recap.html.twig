@@ -1,0 +1,37 @@
+{% block title %}
+    Mon Compte - Avocats & Facile
+{% endblock %}
+
+{% block body %}
+    <h1>Mon Compte</h1>
+
+    <h2>Informations personnelles</h2>
+    <p>Nom : {{ app.user.nom }}</p>
+    <p>Prénom : {{ app.user.prenom }}</p>
+    <p>Email : {{ app.user.email }}</p>
+    <p>Rôle : {{ app.user.roles[0] == 'ROLE_ADMIN' ? 'Administrateur' : 'Utilisateur' }}</p>
+
+    {% if 'ROLE_ADMIN' in app.user.roles %}
+        <h2>Disponibilité de l'avocat</h2>
+        <ul>
+            {% for disponibilite in disponibilites %}
+                <li>{{ disponibilite.date|date('d/m/Y H:i') }}</li>
+            {% else %}
+                <li>Aucune disponibilité ajoutée.</li>
+            {% endfor %}
+        </ul>
+        <a href="{{ path('disponibilites_new') }}" class="btn btn-primary">Ajouter des disponibilités</a>
+    {% endif %}
+
+    <h2>Mes rendez-vous</h2>
+    <ul>
+        {% for reservation in reservations %}
+            <li>
+                Rendez-vous avec {{ reservation.client.nom }} {{ reservation.client.prenom }} 
+                le {{ reservation.date|date('d/m/Y H:i') }}
+            </li>
+        {% else %}
+            <li>Aucun rendez-vous.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

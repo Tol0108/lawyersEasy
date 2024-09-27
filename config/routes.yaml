@@ -2,18 +2,18 @@ home:
     path: /
     controller: App\Controller\HomeController::index
 
-lawyer_profile_complete:
-    path: /profile/lawyer/complete
-    controller: App\Controller\LawyerController::completeProfile
+avocat_list:
+    path: /avocats
+    controller: App\Controller\AvocatController::list
 
-user_list:
-    path: /trouver-un-avocat
-    controller: App\Controller\AvocatController::listAvocats
-
-new_avocat:
-    path: /avocat/new-avocat
+avocat_new:
+    path: /admin/avocat/new
     controller: App\Controller\AvocatController::new
     methods: [GET, POST]
+
+recap:
+    path: /recap
+    controller: App\Controller\AccountController::index
 
 convert:
     path: /convert
@@ -22,10 +22,7 @@ convert:
 weather:
     path: /weather/{city}
     controller: App\Controller\WeatherController::weather
-
-mon_compte:
-    path: /mon-compte
-    controller: App\Controller\AccountController::index
+    methods: [GET]
 
 controllers:
     resource: ../src/Controller/
@@ -34,4 +31,8 @@ controllers:
 login:
     path: /login
     controller: App\Controller\SecuriteController::login
+
+logout:
+    path: /logout
+    controller: App\Controller\SecuriteController::logout
 

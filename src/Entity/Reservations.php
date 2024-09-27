@@ -6,6 +6,9 @@ use App\Repository\ReservationsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use DateTimeInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
@@ -24,49 +27,37 @@ class Reservations
     #[Assert\GreaterThan("now")]
     private ?\DateTimeInterface $date_reservation = null;
 
-    #[ORM\Column(length: 30, nullable: true)]
-    private ?string $status = 'en attente';
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: 'reservations')]
     private ?Users $user = null;
 
-    #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: 'legalreservations')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Users $legalAdvisor = null;
+    #[ORM\ManyToOne(targetEntity: Avocat::class, inversedBy: 'reservations')]
+    private ?Avocat $avocat = null; 
 
-    // Ajout du champ pour le document téléchargé
     #[Vich\UploadableField(mapping: 'reservation_documents', fileNameProperty: 'documentName')]
     #[Assert\File(
         maxSize: '10M',
         mimeTypes: ['application/pdf', 'application/x-pdf', 'image/*'],
-        mimeTypesMessage: 'Please upload a valid PDF or image file'
+        mimeTypesMessage: 'Veuillez télécharger un fichier PDF ou image valide.'
     )]
-    private ?File $documents = null;
+    private ?File $documentFile = null;
 
-    // Champ pour stocker le nom du document
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $documentName = null;
 
+    #[ORM\OneToMany(mappedBy: 'reservation', targetEntity: Document::class, cascade: ['persist', 'remove'])]
+    private Collection $documents;
+
     public function __construct()
     {
-        $this->status = 'en attente';
+        $this->documents = new ArrayCollection();
     }
 
-    // Getters et setters
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUser(): ?Users
-    {
-        return $this->user;
-    }
-
-    public function setUser(?Users $user): self
-    {
-        $this->user = $user;
-        return $this;
     }
 
     public function getDateReservation(): ?\DateTimeInterface
@@ -80,48 +71,93 @@ class Reservations
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getUser(): ?Users
     {
-        return $this->status;
+        return $this->user;
     }
 
-    public function setStatus(?string $status): self
+    public function setUser(?Users $user): self
     {
-        $this->status = $status;
+        $this->user = $user;
         return $this;
     }
 
-    public function getLegalAdvisor(): ?Users
+    public function getAvocat(): ?Avocat
     {
-        return $this->legalAdvisor;
+        return $this->avocat;
     }
 
-    public function setLegalAdvisor(?Users $legalAdvisor): self
+    public function setAvocat(?Avocat $avocat): self
     {
-        $this->legalAdvisor = $legalAdvisor;
+        $this->avocat = $avocat;
         return $this;
     }
 
-    // Getter et setter pour documents
-    public function setDocuments(?File $documents = null): void
+    public function getDocumentFile(): ?File
     {
-        $this->documents = $documents;
+        return $this->documentFile;
     }
 
-    public function getDocuments(): ?File
+    public function setDocumentFile(?File $documentFile = null): void
     {
-        return $this->documents;
+        $this->documentFile = $documentFile;
+
+        if ($documentFile) {
+            $this->updatedAt = new \DateTimeImmutable();
+        }
     }
 
-    // Getter et setter pour documentName
+    public function getDocumentName(): ?string
+    {
+        return $this->documentName;
+    }
+
     public function setDocumentName(?string $documentName): self
     {
         $this->documentName = $documentName;
         return $this;
     }
 
-    public function getDocumentName(): ?string
+    public function getDocuments(): Collection
     {
-        return $this->documentName;
+        return $this->documents;
+    }
+
+    public function addDocument(Document $document): self
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents[] = $document;
+            $document->setReservation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(Document $document): self
+    {
+        if ($this->documents->removeElement($document)) {
+            if ($document->getReservation() === $this) {
+                $document->setReservation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updatedAt = new \DateTime();
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
     }
 }

@@ -1,10 +1,19 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Créer une nouvelle disponibilité{% endblock %}
+
 {% block body %}
     <h1>Créer une nouvelle disponibilité</h1>
 
     {{ form_start(form) }}
-        {{ form_widget(form) }}
+        <div class="form-group">
+            <label for="start">Début</label>
+            {{ form_widget(form.start, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="form-group">
+            <label for="end">Fin</label>
+            {{ form_widget(form.end, {'attr': {'class': 'form-control'}}) }}
+        </div>
         <button class="btn btn-success">Enregistrer</button>
     {{ form_end(form) }}
 {% endblock %}

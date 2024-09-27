@@ -2,11 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\DisponibiliteRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: DisponibiliteRepository::class)]
+#[ORM\Entity]
 class Disponibilite
 {
     #[ORM\Id]
@@ -14,39 +13,54 @@ class Disponibilite
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $startDateTime = null;
+    #[ORM\Column(type: 'datetime')]
+    #[Assert\NotBlank]
+    private ?\DateTimeInterface $start = null;
 
-    #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: 'disponibilites')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Users $legalAdvisor = null;
+    #[ORM\Column(type: 'datetime')]
+    #[Assert\NotBlank]
+    private ?\DateTimeInterface $end = null;
+
+    #[ORM\ManyToOne(targetEntity: Users::class)]
+    private ?Users $avocat = null;
+
+    // Getters et setters
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getStartDateTime(): ?\DateTimeInterface
+    public function getStart(): ?\DateTimeInterface
     {
-        return $this->startDateTime;
+        return $this->start;
     }
 
-    public function setStartDateTime(?\DateTimeInterface $startDateTime): self
+    public function setStart(\DateTimeInterface $start): self
     {
-        $this->startDateTime = $startDateTime;
-
+        $this->start = $start;
         return $this;
     }
 
-    public function getLegalAdvisor(): ?Users
+    public function getEnd(): ?\DateTimeInterface
     {
-        return $this->legalAdvisor;
+        return $this->end;
     }
 
-    public function setLegalAdvisor(?Users $legalAdvisor): self
+    public function setEnd(\DateTimeInterface $end): self
     {
-        $this->legalAdvisor = $legalAdvisor;
+        $this->end = $end;
+        return $this;
+    }
 
+    public function getAvocat(): ?Users
+    {
+        return $this->avocat;
+    }
+
+    public function setAvocat(?Users $avocat): self
+    {
+        $this->avocat = $avocat;
         return $this;
     }
 }

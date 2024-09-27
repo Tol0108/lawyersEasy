@@ -27,9 +27,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private ?string $password = null;
 
-    // #[ORM\Column(type: 'string', length: 255)]
-    // private ?string $login = null;
-
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $nom = null;
 
@@ -41,9 +38,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $telephone = null;
-
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $licenceNumber = null;
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
     private ?string $codePostal = null;
@@ -57,8 +51,22 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Reservations::class, cascade: ['persist', 'remove'])]
     private Collection $reservations;
 
+    #[ORM\OneToMany(mappedBy: 'commentaire_user', targetEntity: Commentaire::class, cascade: ['persist', 'remove'])]
+    private Collection $commentaires;
+
+    /*
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: Avocat::class, cascade: ['persist', 'remove'])]
     private ?Avocat $avocat = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $licenceNumber = null;
+
+    #[ORM\OneToMany(mappedBy: 'legalAdvisor', targetEntity: Disponibilite::class, cascade: ['persist', 'remove'])]
+    private Collection $disponibilites;
+
+    #[ORM\OneToMany(mappedBy: 'legalAdvisor', targetEntity: Reservations::class, cascade: ['persist', 'remove'])]
+    private Collection $legalreservations;
+    */
 
     /**
      * @Assert\NotBlank(groups={"create"})
@@ -155,17 +163,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getLicenceNumber(): ?string
-    {
-        return $this->licenceNumber;
-    }
-
-    public function setLicenceNumber(?string $licenceNumber): self
-    {
-        $this->licenceNumber = $licenceNumber;
-        return $this;
-    }
-
     public function getDocuments(): Collection
     {
         return $this->documents;
@@ -229,23 +226,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAvocat(): ?Avocat
-    {
-        return $this->avocat;
-    }
-
-    public function setAvocat(?Avocat $avocat): self
-    {
-        $this->avocat = $avocat;
-
-        // Mettre à jour l'avocat pour refléter cette relation
-        if ($avocat && $avocat->getUser() !== $this) {
-            $avocat->setUser($this);
-        }
-
-        return $this;
-    }
-
     // Méthodes de l'interface UserInterface
 
     public function eraseCredentials()
@@ -274,4 +254,34 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /*
+    public function getAvocat(): ?Avocat
+    {
+        return $this->avocat;
+    }
+
+    public function setAvocat(?Avocat $avocat): self
+    {
+        $this->avocat = $avocat;
+
+        // Lien bidirectionnel entre User et Avocat
+        if ($avocat && $avocat->getUser() !== $this) {
+            $avocat->setUser($this);
+        }
+
+        return $this;
+    }
+    
+    public function getLicenceNumber(): ?string
+    {
+        return $this->licenceNumber;
+    }
+
+    public function setLicenceNumber(?string $licenceNumber): self
+    {
+        $this->licenceNumber = $licenceNumber;
+        return $this;
+    }
+    */
 }

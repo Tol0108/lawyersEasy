@@ -23,9 +23,11 @@ class UserType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => 'Email'
             ])
+            /*
             ->add('login', TextType::class, [
                 'label' => 'Login'
             ])
+            */
             ->add('nom', TextType::class, [
                 'label' => 'Nom'
             ])
@@ -40,28 +42,11 @@ class UserType extends AbstractType
                 'label' => 'Téléphone',
                 'required' => false
             ])
-            ->add('licenceNumber', TextType::class, [
-                'label' => 'Numéro de licence',
-                'required' => false
-            ])
             ->add('isVerified', CheckboxType::class, [
                 'label' => 'Vérifié ?',
                 'required' => false
             ])
-            
-            /*
-            ->add('roles', ChoiceType::class, [
-                'choices' => [
-                    'Admin' => 'ROLE_ADMIN',
-                    'Client' => 'ROLE_CLIENT',
-                    'Avocat' => 'ROLE_AVOCAT'
-                ],
-                'expanded' => true,
-                'multiple' => true,
-                'label' => 'Rôles'
-            ])
 
-            */
             ->add('specialite', EntityType::class, [
                 'class' => Specialite::class,
                 'choice_label' => 'nom',

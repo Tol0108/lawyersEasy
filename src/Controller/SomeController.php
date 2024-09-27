@@ -29,9 +29,9 @@ class SomeController extends AbstractController
     {
         $user = $this->getUser();
 
-    if (in_array('ROLE_CLIENT', $user->getRoles())) {
+    if (in_array('ROLE_USER', $user->getRoles())) {
         // Logique spécifique au client
-    } elseif (in_array('ROLE_AVOCAT', $user->getRoles())) {
+    } elseif (in_array('ROLE_ADMIN', $user->getRoles())) {
         // Logique spécifique à l'avocat
     }
     }

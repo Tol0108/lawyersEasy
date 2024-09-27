@@ -17,6 +17,10 @@
                             <p>Email : {{ avocat.user.email|default('Non spécifié') }}</p>
                             <p>Adresse : {{ avocat.adresse|default('Non spécifiée') }}</p>
                             <p>Téléphone : {{ avocat.telephone|default('Non spécifié') }}</p>
+
+                            {# Nouveau champ pour le numéro de licence #}
+                            <p>Numéro de licence : {{ avocat.licenceNumber|default('Non spécifié') }}</p>
+
                             {% if avocat.specialite %}
                                 <p>Spécialité : {{ avocat.specialite.nom }}</p>
                             {% else %}
