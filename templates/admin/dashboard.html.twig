@@ -4,6 +4,16 @@
 
 {% block body %}
     <h1>Tableau de Bord Administrateur</h1>
-    <p>Nombre d'utilisateurs: {{ userCount }}</p>
-    <!-- Autres données dynamiques -->
+
+    <div class="stats">
+        <p>Nombre d'utilisateurs: {{ userCount }}</p>
+        <p>Nombre d'avocats: {{ avocatCount }}</p>
+        <p>Nombre d'articles: {{ actualiteCount }}</p>
+    </div>
+
+    <!-- Lien pour ajouter un utilisateur, un avocat, un article -->
+    <div class="actions">
+        <a href="{{ path('admin') }}" class="btn btn-primary">Ajouter un avocat</a>
+        <a href="{{ path('admin') }}" class="btn btn-primary">Ajouter un article</a>
+    </div>
 {% endblock %}

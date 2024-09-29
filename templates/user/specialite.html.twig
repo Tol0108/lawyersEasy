@@ -3,10 +3,10 @@
 {% block body %}
     <h1>Utilisateurs de la Spécialité: {{ specialiteId }}</h1>
     <div>
-        {% for user in users %}
-            <p>{{ user.nom }} {{ user.prenom }} - {{ user.specialite.nom }}</p>
+        {% for avocat in avocats %}
+            <p>{{ avocat.nom }} {{ avocat.prenom }} - {{ avocat.specialite.nom }}</p>
         {% else %}
-            <p>Aucun utilisateur trouvé pour cette spécialité.</p>
+            <p>Aucun avocat trouvé pour cette spécialité.</p>
         {% endfor %}
     </div>
 {% endblock %}

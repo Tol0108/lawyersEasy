@@ -20,11 +20,16 @@ class Paiement
     #[ORM\Column(type: Types::DECIMAL, precision: 1, scale: 1, nullable: true)]
     private ?string $prix = null;
 
+    #[ORM\Column(type: Types::STRING, length: 20)]
+    private ?string $status = 'pending'; // "pending", "completed", etc.
+
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $start_date = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $end_date = null;
+
+    // Getters and Setters
 
     public function getId(): ?int
     {
@@ -51,6 +56,17 @@ class Paiement
     {
         $this->prix = $prix;
         return $this;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
     }
 
     public function getStartDate(): ?\DateTimeInterface

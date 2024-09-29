@@ -42,16 +42,13 @@ class UserType extends AbstractType
                 'label' => 'Téléphone',
                 'required' => false
             ])
-            ->add('isVerified', CheckboxType::class, [
-                'label' => 'Vérifié ?',
-                'required' => false
-            ])
-
+            /*
             ->add('specialite', EntityType::class, [
                 'class' => Specialite::class,
                 'choice_label' => 'nom',
                 'label' => 'Spécialité'
             ])
+            */
             ->add('plainPassword', PasswordType::class, [
                 'label' => 'Mot de passe',
                 'required' => false,

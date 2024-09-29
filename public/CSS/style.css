@@ -5,9 +5,10 @@ body {
 .header {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     padding: 10px 20px;
     background-color: #000;
+    flex-wrap: wrap;
 }
 
 .logo-container {
@@ -101,7 +102,6 @@ body {
 }
 
 nav {
-    display: flex;
     flex-grow: 1;
 }
 
@@ -110,12 +110,22 @@ nav ul {
     padding: 0;
     margin: 0;
     display: flex;
-    justify-content: space-around; /* Distribue les éléments de manière égale */
-    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
 nav ul li {
-    padding: 20px;
+    flex-grow: 1;
+    text-align: center;
+    padding: 10px 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white; /* Couleur du texte en blanc */
+    font-weight: bold;
+    transition: color 0.3s ease;
 }
 
 nav ul li.bouton a {
@@ -132,10 +142,81 @@ nav ul li.bouton a:hover {
     background-color: #b98c4d;
 }
 
+nav ul li a:hover,
+nav ul li a:active,
+nav ul li a:focus {
+    color: #d2ae6d; /* Le texte devient bleu lorsque l'onglet est utilisé */
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Fait en sorte que le body prenne toute la hauteur */
+}
+
+main {
+    flex: 1; /* Laisse le contenu principal s'étendre pour remplir l'espace disponible */
+}
+
+footer {
+    text-align: center;
+    padding: 10px 0;
+    background-color: white;
+    color: #000;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
 /* Styles spécifiques pour l'affichage météo */
 .weather-container {
     margin-top: 20px;
     padding: 10px;
     background-color: #e7e7e7;
     border-radius: 5px;
+}
+
+/* Media Queries pour les petits écrans */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    nav ul {
+        flex-direction: row;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    nav ul li {
+        flex-grow: 1;
+        text-align: center;
+        padding: 10px 0;
+    }
+
+    nav ul li.bouton a {
+        padding: 8px 10px; 
+        font-size: 14px;
+    }
+
+    .logo-container img {
+        width: 80px; 
+}
+
+@media (max-width: 480px) {
+    nav ul li.bouton a {
+        flex-grow: 1;
+        font-size: 12px;
+        padding: 6px 0;
+    }
+}
+
 }

@@ -40,7 +40,7 @@ class UserFixtures extends Fixture
         $client->setCodePostal('1200');
         $client->setRoles(['ROLE_USER']);
         $client->setPassword($this->passwordHasher->hashPassword($client, '123'));
-        $specialite = $this->getReference('specialite_1');  
+        // $specialite = $this->getReference('specialite_1');  
 
         $manager->persist($client);
 

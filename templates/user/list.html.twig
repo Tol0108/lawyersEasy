@@ -24,4 +24,33 @@
             <p>Aucun avocat trouvé.</p>
         {% endif %}
     </div>
+
+    <style>
+        .users-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .user-card {
+            width: 23%;
+            margin: 0.5%;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .user-photo {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .user-info {
+            margin-top: 10px;
+        }
+        @media (max-width: 768px) {
+            .user-card {
+                width: 48%;
+                margin: 1%;
+            }
+        }
+    </style>
 {% endblock %}

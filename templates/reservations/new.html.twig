@@ -5,6 +5,12 @@
 {% block body %}
     <h1>Créer une nouvelle réservation</h1>
 
+    {% if reservationForm.vars.errors|length > 0 %}
+        <div class="alert alert-danger">
+            {{ form_errors(reservationForm) }}
+        </div>
+    {% endif %}
+
     {{ form_start(reservationForm, {'attr': {'class': 'reservation-form'}}) }}
     {{ form_row(reservationForm.date_reservation, {
         'attr': {'class': 'js-datepicker'}
@@ -19,6 +25,7 @@
 
     <button type="submit">Réserver</button>
     {{ form_end(reservationForm) }}
+
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>

@@ -21,8 +21,9 @@ class Disponibilite
     #[Assert\NotBlank]
     private ?\DateTimeInterface $end = null;
 
-    #[ORM\ManyToOne(targetEntity: Users::class)]
-    private ?Users $avocat = null;
+    #[ORM\ManyToOne(targetEntity: Avocat::class, inversedBy: 'disponibilites')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Avocat $avocat = null;
 
     // Getters et setters
 

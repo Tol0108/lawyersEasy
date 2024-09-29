@@ -34,40 +34,34 @@ class PaiementController extends AbstractController
 
         return $this->redirect($session->url, 303);
     }
+
     #[Route('/stripe/webhook', name: 'stripe_webhook', methods: ['POST'])]
     public function stripeWebhook(Request $request): Response
     {
         \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
 
-        $header = $request->headers->get('Stripe-Signature');
+        $endpoint_secret = $this->getParameter('stripe_webhook_secret');
         $payload = $request->getContent();
+        $sig_header = $request->headers->get('stripe-signature');
 
         try {
             $event = \Stripe\Webhook::constructEvent(
-                $payload, $header, 'your_stripe_webhook_secret'
-            );
-        } catch(\Exception $e) {
-            // La signature ne correspond pas, la requête pourrait être falsifiée
-            return new Response('Invalid signature', 403);
-        }
-        
-        $payload = $request->getContent();
-        $event = null;
-
-        try {
-            $event = \Stripe\Event::constructFrom(
-                json_decode($payload, true)
+                $payload, $sig_header, $endpoint_secret
             );
         } catch(\UnexpectedValueException $e) {
             // Invalid payload
             return new Response('Invalid payload', 400);
+        } catch(\Stripe\Exception\SignatureVerificationException $e) {
+            // Invalid signature
+            return new Response('Invalid signature', 400);
         }
 
-        // Gérer l'événement
+        // Handling the event
         if ($event->type == 'checkout.session.completed') {
             $session = $event->data->object;
 
             // Logique pour marquer le rendez-vous comme payé
+            // Par exemple : update de la base de données pour confirmer le paiement
         }
 
         return new Response('Webhook handled', 200);

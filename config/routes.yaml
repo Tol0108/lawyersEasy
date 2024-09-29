@@ -36,3 +36,12 @@ logout:
     path: /logout
     controller: App\Controller\SecuriteController::logout
 
+success_url:
+    path: /paiement/success
+    controller: App\Controller\PaiementController::success
+
+cancel_url:
+    path: /paiement/cancel
+    controller: App\Controller\PaiementController::cancel
+
+

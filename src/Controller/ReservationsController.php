@@ -130,9 +130,12 @@ class ReservationsController extends AbstractController
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
 
+        dump($form->getErrors(true, false));  // Pour voir les erreurs de validation
+
         if ($form->isSubmitted() && $form->isValid()) {
             // Récupérer la date de la réservation demandée
             $date = $form->get('date_reservation')->getData();
+            dump($date);  // Vérifie que la date est correcte
 
             // Vérifier si le créneau est déjà réservé pour cet avocat
             $existingReservation = $entityManager->getRepository(Reservations::class)->findOneBy([
@@ -163,10 +166,10 @@ class ReservationsController extends AbstractController
     }
 
     // Fonction pour envoyer la notification email à l'avocat
-    private function sendReservationNotification(Avocat $legalAdvisor, Reservations $reservation) // Changement de type ici
+    private function sendReservationNotification(Avocat $legalAdvisor, Reservations $reservation)
     {
         $email = (new Email())
-            ->from('no-reply@votresite.com')
+            ->from('tarik0108@hotmail.com')
             ->to($legalAdvisor->getEmail())
             ->subject('Nouvelle réservation confirmée')
             ->text('Vous avez une nouvelle réservation pour le ' . $reservation->getDateReservation()->format('Y-m-d H:i') . '. Merci de vous connecter pour plus de détails.');

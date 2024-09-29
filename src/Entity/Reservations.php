@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Avocat;
+use App\Entity\Users;
 use App\Repository\ReservationsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -121,6 +123,21 @@ class Reservations
     public function getDocuments(): Collection
     {
         return $this->documents;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function getUser(): ?Users
+    {
+        return $this->user;
+    }
+
+    public function getAvocat(): ?Avocat
+    {
+        return $this->avocat;
     }
 
     public function addDocument(Document $document): self

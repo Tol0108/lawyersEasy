@@ -24,7 +24,7 @@ final class Version20240914131842 extends AbstractMigration
         $this->addSql('ALTER TABLE avocat DROP nom, DROP prenom, DROP email');
         $this->addSql('ALTER TABLE users DROP FOREIGN KEY FK_1483A5E92195E0F0');
         $this->addSql('DROP INDEX IDX_1483A5E92195E0F0 ON users');
-        $this->addSql('ALTER TABLE users DROP specialite_id');
+
     }
 
     public function down(Schema $schema): void

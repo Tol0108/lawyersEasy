@@ -30,7 +30,7 @@ class UserController extends AbstractController
         $users = $userRepository->findAll();
         return $this->render('user/list.html.twig', ['users' => $users]);
     }
-    */
+    
 
     #[Route('/users/specialite/{specialiteId}', name: 'users_by_specialite')]
     public function usersBySpecialite(UsersRepository $userRepository, $specialiteId): Response
@@ -41,4 +41,5 @@ class UserController extends AbstractController
             'specialiteId' => $specialiteId
         ]);
     }
+    */
 }

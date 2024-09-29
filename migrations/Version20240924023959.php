@@ -31,8 +31,8 @@ final class Version20240924023959 extends AbstractMigration
         $this->addSql('ALTER TABLE reservations DROP FOREIGN KEY FK_4DA2397A53052A');
         $this->addSql('DROP INDEX IDX_4DA2397A53052A ON reservations');
         $this->addSql('ALTER TABLE reservations ADD updated_at DATETIME DEFAULT NULL, DROP legal_advisor_id, DROP status');
-        $this->addSql('ALTER TABLE users ADD specialite_id INT DEFAULT NULL, DROP licence_number');
-        $this->addSql('ALTER TABLE users ADD CONSTRAINT FK_1483A5E92195E0F0 FOREIGN KEY (specialite_id) REFERENCES specialite (id)');
+
+
         $this->addSql('CREATE INDEX IDX_1483A5E92195E0F0 ON users (specialite_id)');
     }
 

@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity]
 #[Vich\Uploadable]
@@ -31,13 +33,25 @@ class Avocat
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $telephone = null;
 
-    #[ORM\ManyToOne(targetEntity: Specialite::class)]
+    #[ORM\ManyToOne(targetEntity: Specialite::class, inversedBy: 'avocats')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Specialite $specialite = null;
+
+    #[ORM\OneToMany(mappedBy: 'avocat', targetEntity: Disponibilite::class)]
+    private Collection $disponibilites;
+
+    #[ORM\OneToMany(mappedBy: 'avocat', targetEntity: Reservations::class)]
+    private Collection $reservations;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $photo = null;  // Stocke le chemin du fichier
 
+    public function __construct()
+    {
+        $this->disponibilites = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
+    }
+    
     // Getters et setters
 
     public function getId(): ?int
@@ -109,6 +123,16 @@ class Avocat
     {
         $this->specialite = $specialite;
         return $this;
+    }
+
+    public function getDisponibilites(): Collection
+    {
+        return $this->disponibilites;
+    }
+
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
     }
 
     public function getPhoto(): ?string

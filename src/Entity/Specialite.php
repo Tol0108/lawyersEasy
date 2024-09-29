@@ -17,15 +17,12 @@ class Specialite
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\OneToMany(mappedBy: 'specialite', targetEntity: Users::class)]
-    private Collection $users;
-
     #[ORM\OneToMany(mappedBy: 'specialite', targetEntity: Avocat::class)]
     private Collection $avocats;
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
+        $this->avocats = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -43,9 +40,9 @@ class Specialite
         $this->nom = $nom;
         return $this;
     }
-
-    public function getUsers(): Collection
+    
+    public function getAvocats(): Collection
     {
-        return $this->users;
+        return $this->avocats;
     }
 }

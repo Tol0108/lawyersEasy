@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Avocat;
-use App\Entity\Users;
+use App\Entity\Disponibilite;
 use App\Entity\Reservations;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -22,6 +22,15 @@ class ReservationType extends AbstractType
                 'widget' => 'single_text',
                 'html5' => false,
                 'attr' => ['class' => 'js-datepicker'],
+            ])
+            ->add('disponibilite', EntityType::class, [
+                'class' => Disponibilite::class,
+                'choice_label' => function($disponibilite) {
+                    return $disponibilite->getDate()->format('d/m/Y H:i');
+                },
+                'label' => 'Choisir un créneau disponible',
+                'expanded' => false,
+                'multiple' => false
             ])
             ->add('documents', FileType::class, [
                 'label' => 'Télécharger des documents',
